@@ -1,0 +1,31 @@
+.app-container {
+}
+
+.tabel {
+  float: left;
+}
+
+.founds-container {
+  float: left;
+  scale: 0.5;
+  transform-origin: top left;
+}
+
+.founds-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 5px;
+  background-color: #ccc;
+  padding: 5px;
+}
