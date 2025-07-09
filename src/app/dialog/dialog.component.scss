@@ -1,0 +1,22 @@
+.dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  height: 250px;
+  border-radius: 8px;
+  background-color: rgb(255, 254, 237);
+  border: 1px solid #5f673b;
+  font-size: 30px;
+  opacity: 0.9;
+}
+
+.center-screen {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  min-width: 100vw;
+}

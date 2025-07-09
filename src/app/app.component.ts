@@ -3,11 +3,12 @@ import { Deck } from './deck';
 import { CardComponent } from './card/card.component';
 import { CommonModule } from '@angular/common';
 import { CardInfo } from './card-info';
+import { DialogComponent } from './dialog/dialog.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CardComponent, CommonModule],
+  imports: [CardComponent, CommonModule, DialogComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -23,6 +24,8 @@ export class AppComponent {
   Time = '00:00';
   Started = new Date().getTime();
   TimeHandle: any = null;
+  showDialog = false;
+  dialogMessage = '';
 
   constructor() {
     this.Deck = new Deck();
@@ -72,7 +75,8 @@ export class AppComponent {
           this.Found.push(structuredClone(this.SelectedCards));
           if (this.Found.length === this.SetCount) {
             clearInterval(this.TimeHandle);
-            alert('Finished!');
+            this.dialogMessage = 'Good! You made it!';
+            this.showDialog = true;
           }
         }
         this.SelectedCards = [];
