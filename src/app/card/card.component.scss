@@ -1,12 +1,9 @@
 .card {
   background-color: white;
-  width: 100px;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 6px;
-  padding-bottom: 6px;
+  width: 10vw;
+  padding: 1vw;
   margin: 0 auto;
-  border-radius: 10px;
+  border-radius: 0.5vw;
 }
 
 .selected {
@@ -20,14 +17,14 @@
 .card-images {
   display: flex;
   justify-content: center;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 1vw;
+  padding-bottom: 1vw;
 }
 
 .card-images img {
-  width: 50px;
+  width: 4vw;
   height: auto;
   display: block;
   transform: rotate(90deg);
-  margin: -10px;
+  margin: -0.3vw;
 }

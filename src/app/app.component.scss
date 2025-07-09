@@ -2,7 +2,7 @@
 }
 
 .text {
-  font-size: 22px;
+  font-size: 1.5em;
 }
 
 .tabel {
@@ -10,9 +10,9 @@
 }
 
 .founds-container {
-  margin-top: 20px;
+  margin-top: 1em;
   float: left;
-  scale: 0.5;
+  scale: 0.6;
   transform-origin: top left;
 }
 
@@ -30,7 +30,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 5px;
+  gap: 0.3vw;
   background-color: #ccc;
-  padding: 5px;
+  padding: 1vw;
 }
