@@ -4,6 +4,7 @@ import { CardComponent } from './card/card.component';
 import { CommonModule } from '@angular/common';
 import { CardInfo } from './card-info';
 import { DialogComponent } from './dialog/dialog.component';
+import { Utils } from './utils';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,7 @@ export class AppComponent {
   TimeHandle: any = null;
   showDialog = false;
   dialogMessage = '';
+  Today = Utils.getToday();
 
   constructor() {
     this.Deck = new Deck();
@@ -144,7 +146,7 @@ export class AppComponent {
   }
 
   addRandomcard() {
-    const i = Math.floor(Math.random() * 82);
+    const i = Math.floor(Utils.randomInt(0, 80));
     const card = this.Deck.Cards[i];
     if (this.Tabel.find((x) => x.Id === card.Id)) {
       this.addRandomcard();
