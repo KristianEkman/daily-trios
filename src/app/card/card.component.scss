@@ -1,6 +1,6 @@
 .card {
   background-color: white;
-  width: 10vw;
+  width: 13vw;
   padding: 1vw;
   margin: 0 auto;
   border-radius: 0.5vw;
@@ -13,12 +13,12 @@
 .card-images {
   display: flex;
   justify-content: center;
-  padding-top: 1vw;
-  padding-bottom: 1vw;
+  padding-top: 2vw;
+  padding-bottom: 2vw;
 }
 
 .card-images img {
-  width: 4vw;
+  width: 5vw;
   height: auto;
   display: block;
   transform: rotate(90deg);

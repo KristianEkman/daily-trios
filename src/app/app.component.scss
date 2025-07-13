@@ -1,6 +1,15 @@
 .app-container {
 }
 
+.buttons {
+  display: flex;
+  gap: 2vw;
+  padding-bottom: 2vh;
+  button {
+    height: 2em;
+  }
+}
+
 .text {
   font-size: 1.5em;
 }
@@ -19,6 +28,7 @@
 .founds-row {
   display: flex;
   justify-content: flex-start;
+  margin-top: 8px;
 }
 
 .sub-header {
@@ -33,4 +43,10 @@
   gap: 0.3vw;
   background-color: #ccc;
   padding: 0.3vw;
+}
+
+.time {
+  position: absolute;
+  right: 0;
+  top: 0;
 }

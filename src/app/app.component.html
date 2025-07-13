@@ -1,9 +1,14 @@
 <div class="app-container">
+  <div class="buttons">
+    <button (click)="startDaily()">Daily</button>
+    <button (click)="startRandom()">Random</button>
+    <button (click)="shuffleTable()">Shuffle</button>
+    <!-- <button (click)="giveHint()">Hint</button> -->
+  </div>
   <div class="tabel">
     <div class="sub-header">
       <span>Find the {{ SetCount }} sets</span>
-      <span>{{Today}}</span>
-      <span>{{ Time }}</span>
+      <span>{{ Today }}</span>
     </div>
     <div class="grid">
       <app-card
@@ -20,6 +25,9 @@
       <app-card *ngFor="let card of cards" [CardInfo]="card"> </app-card>
     </div>
   </div>
+</div>
+<div class="time">
+  <span>{{ Time }}</span>
 </div>
 <app-dialog
   [Visible]="showDialog"

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CardInfo } from './card-info';
 import { DialogComponent } from './dialog/dialog.component';
 import { Utils } from './utils';
+import { RandomService } from './randoms';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ import { Utils } from './utils';
 })
 export class AppComponent {
   title = 'daily-set';
-  Deck: Deck;
+  Deck: Deck = new Deck();
   SelectedCards: CardInfo[] = [];
   Tabel: CardInfo[] = [];
   Found: CardInfo[][] = [];
@@ -29,12 +30,8 @@ export class AppComponent {
   dialogMessage = '';
   Today = Utils.getToday();
 
-  constructor() {
-    this.Deck = new Deck();
-    this.Deck.shuffle();
-    this.setTable();
-    this.countSets();
-    this.startTime();
+  constructor(private randomService: RandomService) {
+    this.startDaily();
   }
 
   getPath(c: CardInfo) {
@@ -77,7 +74,7 @@ export class AppComponent {
           this.Found.push(structuredClone(this.SelectedCards));
           if (this.Found.length === this.SetCount) {
             clearInterval(this.TimeHandle);
-            this.dialogMessage = 'Good! You made it!';
+            this.dialogMessage = 'Good! Your time:' + this.Time;
             this.showDialog = true;
           }
         }
@@ -133,7 +130,16 @@ export class AppComponent {
     const card2 = this.Tabel[0];
     this.createSetOrAddRandom(card1, card2);
 
-    this.Tabel = Deck.shuffelArray(this.Tabel);
+    this.Tabel = this.shuffelArray(this.Tabel);
+  }
+
+  shuffelArray<T>(array: T[]) {
+    const shuffled = array.slice(); // Make a copy
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = this.randomService.getRandomInt(0, i);
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
   }
 
   createSetOrAddRandom(card1: CardInfo, card2: CardInfo) {
@@ -146,7 +152,7 @@ export class AppComponent {
   }
 
   addRandomcard() {
-    const i = Math.floor(Utils.randomInt(0, 80));
+    const i = this.randomService.getRandomInt(0, 80);
     const card = this.Deck.Cards[i];
     if (this.Tabel.find((x) => x.Id === card.Id)) {
       this.addRandomcard();
@@ -174,5 +180,43 @@ export class AppComponent {
       }
     }
     this.SetCount = sets.length;
+  }
+
+  giveHint() {
+    throw new Error('Method not implemented.');
+  }
+
+  shuffleTable() {
+    this.Tabel = this.shuffelArray(this.Tabel);
+  }
+
+  startRandom() {
+    this.randomService.removeSeed();
+    this.startGame();
+  }
+
+  startDaily() {
+    this.randomService.setSeed();
+    this.startGame();
+  }
+
+  startGame() {
+    this.SelectedCards = [];
+    this.Tabel = [];
+    this.Found = [];
+    this.FoundIds = [];
+    this.ExistingIds = [];
+    this.SetCount = 0;
+    this.Time = '00:00';
+    this.Started = new Date().getTime();
+
+    this.showDialog = false;
+    this.dialogMessage = '';
+    this.Today = Utils.getToday();
+    this.Deck = new Deck();
+    this.Deck.Cards = this.shuffelArray(this.Deck.Cards);
+    this.setTable();
+    this.countSets();
+    this.startTime();
   }
 }

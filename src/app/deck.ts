@@ -36,19 +36,6 @@ export class Deck {
     }
   }
 
-  shuffle() {
-    this.Cards = Deck.shuffelArray(this.Cards);
-  }
-
-  public static shuffelArray<T>(array: T[]) {
-    const shuffled = array.slice(); // Make a copy
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Utils.randomInt(0, i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  }
-
   findMissingSetCard(card1: CardInfo, card2: CardInfo) {
     const sameColor = card1.Color === card2.Color;
     const sameCount = card1.Count === card2.Count;
