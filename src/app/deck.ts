@@ -27,6 +27,7 @@ export class Deck {
               Shape: sha,
               Id: id,
               Selected: false,
+              Blink: false,
             };
             cards.push(info);
             id++;

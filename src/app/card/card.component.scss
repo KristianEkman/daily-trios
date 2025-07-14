@@ -6,6 +6,16 @@
   border-radius: 0.5vw;
 }
 
+.blink {
+  animation: blinker 0.2s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    background-color: rgb(242, 242, 151);
+  }
+}
+
 .selected {
   background-color: rgb(216, 217, 238) !important;
 }

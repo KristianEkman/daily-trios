@@ -29,6 +29,7 @@ export class AppComponent {
   showDialog = false;
   dialogMessage = '';
   Today = Utils.getToday();
+  HintCount = 0;
 
   constructor(private randomService: RandomService) {
     this.startDaily();
@@ -44,6 +45,8 @@ export class AppComponent {
 
       const diffMs = now - this.Started;
       let totalSeconds = Math.floor(diffMs / 1000);
+
+      totalSeconds += this.HintCount * 60;
       let minutes = Math.floor(totalSeconds / 60);
       let seconds = totalSeconds % 60;
       let formatted = `${String(minutes).padStart(2, '0')}:${String(
@@ -180,10 +183,26 @@ export class AppComponent {
       }
     }
     this.SetCount = sets.length;
+    this.ExistingIds = sets;
   }
 
   giveHint() {
-    throw new Error('Method not implemented.');
+    for (let i = 0; i < this.ExistingIds.length; i++) {
+      const setId = this.ExistingIds[i];
+      if (this.FoundIds.indexOf(setId) == -1) {
+        const cardIds = setId.split('_');
+        const hintId = this.HintCount % 2 == 0 ? cardIds[0] : cardIds[1];
+        const hintCard = this.Tabel.find((c) => c.Id == parseInt(hintId));
+        if (hintCard) {
+          hintCard.Blink = true;
+          setTimeout(() => {
+            hintCard.Blink = false;
+          }, 1000);
+        }
+        this.HintCount++;
+        return;
+      }
+    }
   }
 
   shuffleTable() {
@@ -208,6 +227,7 @@ export class AppComponent {
     this.ExistingIds = [];
     this.SetCount = 0;
     this.Time = '00:00';
+    this.HintCount = 0;
     this.Started = new Date().getTime();
 
     this.showDialog = false;

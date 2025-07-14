@@ -7,4 +7,5 @@ export interface CardInfo {
   Count: number;
   Id: number;
   Selected: boolean;
+  Blink: boolean;
 }
