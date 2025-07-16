@@ -6,6 +6,7 @@ import { CardInfo } from './card-info';
 import { DialogComponent } from './dialog/dialog.component';
 import { Utils } from './utils';
 import { RandomService } from './randoms';
+import $ from 'jquery';
 
 @Component({
   selector: 'app-root',
@@ -30,9 +31,30 @@ export class AppComponent {
   dialogMessage = '';
   Today = Utils.getToday();
   HintCount = 0;
+  ScaleWith = 1;
+  ScaleHeight = 1;
 
   constructor(private randomService: RandomService) {
     this.startDaily();
+
+    setInterval(() => {
+      const winWidth = $(window).width() ?? 0;
+      const winHeight = $(window).height() ?? 0;
+      const appWidth = $('.app-container').width() ?? 0;
+      const appHeight = $('.app-container').height() ?? 0;
+      const btnHeight = $('.buttons').height() ?? 0;
+
+      const flexDirection = winWidth > winHeight ? 'row' : 'column';
+
+      $('.app-container').css('flex-direction', flexDirection);
+
+      $('.app-container').css(
+        'transform',
+        `scaleY(${(0.9 * winHeight) / (appHeight + btnHeight)}) scaleX(${
+          (0.9 * winWidth) / appWidth
+        })`
+      );
+    }, 1000);
   }
 
   getPath(c: CardInfo) {

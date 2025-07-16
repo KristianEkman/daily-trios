@@ -1,9 +1,8 @@
 .card {
   background-color: white;
-  width: 13vw;
-  padding: 1vw;
+  padding: 15px;
   margin: 0 auto;
-  border-radius: 0.5vw;
+  border-radius: 5px;
 }
 
 .blink {
@@ -23,12 +22,12 @@
 .card-images {
   display: flex;
   justify-content: center;
-  padding-top: 2vw;
-  padding-bottom: 2vw;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .card-images img {
-  width: 5vw;
+  width: 50px;
   height: auto;
   display: block;
   transform: rotate(90deg);
