@@ -75,6 +75,7 @@ export class AppComponent {
         if (this.FoundIds.indexOf(setId) == -1) {
           this.FoundIds.push(setId);
           this.Found.push(structuredClone(this.SelectedCards));
+          this.SelectedCards.forEach((c) => this.blink(c));
           if (this.Found.length === this.SetCount) {
             clearInterval(this.TimeHandle);
             this.dialogMessage = 'Good! Your time:' + this.Time;
@@ -194,15 +195,19 @@ export class AppComponent {
         const hintId = this.HintCount % 2 == 0 ? cardIds[0] : cardIds[1];
         const hintCard = this.Tabel.find((c) => c.Id == parseInt(hintId));
         if (hintCard) {
-          hintCard.Blink = true;
-          setTimeout(() => {
-            hintCard.Blink = false;
-          }, 1000);
+          this.blink(hintCard);
         }
         this.HintCount++;
         return;
       }
     }
+  }
+
+  blink(card: CardInfo) {
+    card.Blink = true;
+    setTimeout(() => {
+      card.Blink = false;
+    }, 1000);
   }
 
   shuffleTable() {
