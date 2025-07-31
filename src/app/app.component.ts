@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Deck } from './deck';
 import { CardComponent } from './card/card.component';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { CardInfo } from './card-info';
 import { DialogComponent } from './dialog/dialog.component';
 import { Utils } from './utils';
 import { RandomService } from './randoms';
+import { Database, getDatabase, ref, set } from '@angular/fire/database';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,8 @@ import { RandomService } from './randoms';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  private database: Database = inject(Database);
+
   title = 'daily-set';
   Deck: Deck = new Deck();
   SelectedCards: CardInfo[] = [];
@@ -23,6 +26,7 @@ export class AppComponent {
   FoundIds: string[] = [];
   ExistingIds: string[] = [];
   SetCount = 0;
+  TotalSeconds = 0;
   Time = '00:00';
   Started = new Date().getTime();
   TimeHandle: any = null;
@@ -30,12 +34,26 @@ export class AppComponent {
   dialogMessage = '';
   Today = Utils.getToday();
   HintCount = 0;
+  UserName = 'Guest';
 
   constructor(private randomService: RandomService) {
+    this.setUserName();
     this.startDaily();
   }
 
-  getPath(c: CardInfo) {
+  storeResult(user: string, gameId: string, seconds: number) {
+    const path = `${gameId}/${user}`;
+    const dbRef = ref(this.database, path);
+    set(dbRef, { time: seconds })
+      .then(() => {
+        console.log('Data saved successfully!');
+      })
+      .catch((error) => {
+        console.error('Error saving data:', error);
+      });
+  }
+
+  getCardPath(c: CardInfo) {
     return `set_picts/${c.Shape}_${c.Fill}_${c.Color}.png`;
   }
 
@@ -47,6 +65,7 @@ export class AppComponent {
       let totalSeconds = Math.floor(diffMs / 1000);
 
       totalSeconds += this.HintCount * 60;
+      this.TotalSeconds = totalSeconds;
       let minutes = Math.floor(totalSeconds / 60);
       let seconds = totalSeconds % 60;
       let formatted = `${String(minutes).padStart(2, '0')}:${String(
@@ -77,6 +96,7 @@ export class AppComponent {
           this.Found.push(structuredClone(this.SelectedCards));
           this.SelectedCards.forEach((c) => this.blink(c));
           if (this.Found.length === this.SetCount) {
+            this.storeResult(this.UserName, this.Today, this.TotalSeconds);
             clearInterval(this.TimeHandle);
             this.dialogMessage = 'Good! Your time:' + this.Time;
             this.showDialog = true;
@@ -133,7 +153,6 @@ export class AppComponent {
     const card1 = this.Tabel[10];
     const card2 = this.Tabel[0];
     this.createSetOrAddRandom(card1, card2);
-
     this.Tabel = this.shuffelArray(this.Tabel);
   }
 
@@ -214,6 +233,20 @@ export class AppComponent {
     this.Tabel = this.shuffelArray(this.Tabel);
   }
 
+  setUserName() {
+    let name = localStorage.getItem('set-user-name');
+
+    if (!name) {
+      name = prompt('What is your name?');
+      if (name) {
+        localStorage.setItem('set-user-name', name);
+      } else {
+        name = 'Guest';
+      }
+    }
+    this.UserName = name;
+  }
+
   startRandom() {
     this.randomService.removeSeed();
     this.startGame();
@@ -232,6 +265,7 @@ export class AppComponent {
     this.ExistingIds = [];
     this.SetCount = 0;
     this.Time = '00:00';
+    this.TotalSeconds = 0;
     this.HintCount = 0;
     this.Started = new Date().getTime();
 
