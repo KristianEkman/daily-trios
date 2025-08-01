@@ -19,6 +19,11 @@
 }
 
 .founds-container {
+  .found-count {
+    display: block;
+    text-align: center;
+  }
+  font-size: x-large;
   margin-top: 1em;
   float: left;
   scale: 0.6;
@@ -58,12 +63,14 @@
   font-size: 1.5em;
 }
 
-.toplist{    
-  font-size: .85rem;
+.toplist {
+  font-size: 0.85rem;
   flex-direction: column;
 
-  .name{
-    margin-right: .5rem;
+  .name {
+    margin-right: 0.5rem;
   }
-  
+  td {
+    text-align: left;
+  }
 }

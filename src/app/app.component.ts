@@ -17,7 +17,7 @@ import { Database, get, getDatabase, ref, set } from '@angular/fire/database';
 })
 export class AppComponent {
   private database: Database = inject(Database);
-
+  GameType: 'random' | 'daily' = 'daily';
   title = 'daily-set';
   Deck: Deck = new Deck();
   SelectedCards: CardInfo[] = [];
@@ -41,13 +41,20 @@ export class AppComponent {
   constructor(private randomService: RandomService) {
     this.setUserName();
 
-    this.getTopList(this.Today).then((topList) => {
-      this.Toplist = topList;
-    });
     this.startDaily();
   }
 
+  showToplist() {
+    this.getTopList(this.Today).then((topList) => {
+      this.Toplist = topList;
+    });
+    this.ShowToplist = true;
+  }
+
   storeResult(user: string, gameId: string, seconds: number) {
+    if (this.GameType === 'random') {
+      return;
+    }
     const path = `${gameId}/${user}`;
     const dbRef = ref(this.database, path);
 
@@ -288,6 +295,16 @@ export class AppComponent {
     this.Tabel = this.shuffelArray(this.Tabel);
   }
 
+  changeUserName() {
+    let name = prompt('What is your name?');
+    if (name) {
+      localStorage.setItem('set-user-name', name);
+    } else {
+      name = 'Guest';
+    }
+    this.UserName = name;
+  }
+
   setUserName() {
     let name = localStorage.getItem('set-user-name');
 
@@ -303,11 +320,13 @@ export class AppComponent {
   }
 
   startRandom() {
+    this.GameType = 'random';
     this.randomService.removeSeed();
     this.startGame();
   }
 
   startDaily() {
+    this.GameType = 'daily';
     this.randomService.setSeed();
     this.startGame();
   }
