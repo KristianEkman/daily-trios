@@ -288,7 +288,7 @@ export class AppComponent {
     card.Blink = true;
     setTimeout(() => {
       card.Blink = false;
-    }, 1000);
+    }, 500);
   }
 
   shuffleTable() {
