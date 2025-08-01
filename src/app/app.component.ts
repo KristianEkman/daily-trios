@@ -6,7 +6,7 @@ import { CardInfo } from './card-info';
 import { DialogComponent } from './dialog/dialog.component';
 import { Utils } from './utils';
 import { RandomService } from './randoms';
-import { Database, getDatabase, ref, set } from '@angular/fire/database';
+import { Database, get, getDatabase, ref, set } from '@angular/fire/database';
 
 @Component({
   selector: 'app-root',
@@ -35,22 +35,68 @@ export class AppComponent {
   Today = Utils.getToday();
   HintCount = 0;
   UserName = 'Guest';
+  Toplist: { user: string; time: number }[] = [];
 
   constructor(private randomService: RandomService) {
     this.setUserName();
+
+    this.getTopList(this.Today).then((topList) => {
+      this.Toplist = topList;
+    });
     this.startDaily();
   }
 
   storeResult(user: string, gameId: string, seconds: number) {
     const path = `${gameId}/${user}`;
     const dbRef = ref(this.database, path);
-    set(dbRef, { time: seconds })
-      .then(() => {
-        console.log('Data saved successfully!');
+
+    get(dbRef)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          console.log('Data already exists. Not saving.');
+          return;
+        }
+        set(dbRef, { time: seconds })
+          .then(() => {
+            console.log('Data saved successfully!');
+          })
+          .catch((error) => {
+            console.error('Error saving data:', error);
+          });
       })
       .catch((error) => {
-        console.error('Error saving data:', error);
+        console.error('Error checking existing data:', error);
       });
+  }
+
+  async getTopList(
+    gameId: string,
+    limit: number = 10
+  ): Promise<{ user: string; time: number }[]> {
+    const db = getDatabase();
+    const pathRef = ref(db, gameId);
+
+    try {
+      const snapshot = await get(pathRef);
+      if (!snapshot.exists()) {
+        console.log('No results found for this gameId.');
+        return [];
+      }
+
+      const results: { user: string; time: number }[] = [];
+
+      snapshot.forEach((childSnapshot) => {
+        const user = childSnapshot.key!;
+        const time = childSnapshot.val().time;
+        results.push({ user, time });
+      });
+
+      // Sort by time ascending and return the top `limit` results
+      return results.sort((a, b) => a.time - b.time).slice(0, limit);
+    } catch (error) {
+      console.error('Error fetching top list:', error);
+      return [];
+    }
   }
 
   getCardPath(c: CardInfo) {
@@ -88,14 +134,16 @@ export class AppComponent {
     cards.push(card);
     if (cards.length == 3) {
       if (this.isSet(cards[0], cards[1], cards[2])) {
+        // a set is found
         cards.forEach((c) => (c.Selected = false));
         const setId = this.getId(this.SelectedCards);
-
         if (this.FoundIds.indexOf(setId) == -1) {
+          // it is a new set
           this.FoundIds.push(setId);
           this.Found.push(structuredClone(this.SelectedCards));
           this.SelectedCards.forEach((c) => this.blink(c));
           if (this.Found.length === this.SetCount) {
+            // all sets are found
             this.storeResult(this.UserName, this.Today, this.TotalSeconds);
             clearInterval(this.TimeHandle);
             this.dialogMessage = 'Good! Your time:' + this.Time;
