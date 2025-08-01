@@ -36,6 +36,7 @@ export class AppComponent {
   HintCount = 0;
   UserName = 'Guest';
   Toplist: { user: string; time: number }[] = [];
+  ShowToplist = false;
 
   constructor(private randomService: RandomService) {
     this.setUserName();
@@ -111,15 +112,21 @@ export class AppComponent {
       let totalSeconds = Math.floor(diffMs / 1000);
 
       totalSeconds += this.HintCount * 60;
+
       this.TotalSeconds = totalSeconds;
-      let minutes = Math.floor(totalSeconds / 60);
-      let seconds = totalSeconds % 60;
-      let formatted = `${String(minutes).padStart(2, '0')}:${String(
-        seconds
-      ).padStart(2, '0')}`;
+      let formatted = this.formatTime(totalSeconds);
 
       this.Time = formatted;
     }, 1000);
+  }
+
+  public formatTime(totalSeconds: number) {
+    let minutes = Math.floor(totalSeconds / 60);
+    let seconds = totalSeconds % 60;
+    let formatted = `${String(minutes).padStart(2, '0')}:${String(
+      seconds
+    ).padStart(2, '0')}`;
+    return formatted;
   }
 
   cardUnSelected(card: CardInfo) {

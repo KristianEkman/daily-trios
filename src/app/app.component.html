@@ -4,6 +4,7 @@
     <button (click)="startRandom()">Random</button>
     <button (click)="shuffleTable()">Shuffle</button>
     <button (click)="giveHint()">Hint</button>
+    <button (click)="ShowToplist = !ShowToplist">Toplist</button>
   </div>
 
   <div class="tabel">
@@ -26,22 +27,27 @@
       <app-card *ngFor="let card of cards" [CardInfo]="card"> </app-card>
     </div>
   </div>
-  <div class="toplist">
-    <strong>Toplist</strong>
-    @for (item of Toplist; track $index) {
-    <div>
-      <span>{{ item.user }}</span>
-      <span>{{ item.time }}s</span>
-    </div>
-    }
-  </div>
 </div>
 <div class="usertime">
   <div class="user">{{ UserName }}</div>
   <div class="time">{{ Time }}</div>
 </div>
+
 <app-dialog
   [Visible]="showDialog"
   [Message]="dialogMessage"
   (click)="showDialog = false"
 ></app-dialog>
+
+@if(ShowToplist){
+<div (click)="ShowToplist = false" class="center-screen">
+  <div class="toplist dialog">
+    @for (item of Toplist; track $index) {
+    <div>
+      <span class="name">{{ item.user }}</span>
+      <span>{{ formatTime(item.time) }}</span>
+    </div>
+    }
+  </div>
+</div>
+}
