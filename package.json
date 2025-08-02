@@ -8,7 +8,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "deploy-build": "ng build --output-path docs --base-href /daily-set/",
-    "deploy": "ng deploy --base-href /daily-set/"
+    "move-build": "mv docs/browser/* docs",
+    "do-deploy": "ng deploy --base-href /daily-set/",
+    "deploy": "npm run deploy-build && npm run move-build && npm run do-deploy"
   },
   "private": true,
   "dependencies": {
