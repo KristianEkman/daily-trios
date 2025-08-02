@@ -163,6 +163,14 @@ export class AppComponent {
             this.dialogMessage = 'Good! Your time:' + this.Time;
             this.showDialog = true;
           }
+        } else {
+          // the set already exists
+          this.Found.forEach((f) => {
+            const thisId = this.getId(f);
+            if (setId === thisId) {
+              f.forEach((c) => this.blink(c));
+            }
+          });
         }
         this.SelectedCards = [];
       }
