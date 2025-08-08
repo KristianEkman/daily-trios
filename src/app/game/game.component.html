@@ -1,0 +1,59 @@
+<div class="app-container">
+  <div class="buttons">
+    <button (click)="startDaily()">Daily</button>
+    <button (click)="seedRandomAndStart()">Random</button>
+    <button (click)="shuffleTable()">Shuffle</button>
+    <button (click)="giveHint()">Hint</button>
+    <button (click)="showToplist()">Toplist</button>
+  </div>
+
+  <div class="tabel">
+    <div class="sub-header">
+      <span>Find the {{ SetCount }} sets</span>
+      <span>{{ GameType == "random" ? "Id: " + GameId : Today }}</span>
+    </div>
+    <div class="grid">
+      <app-card
+        *ngFor="let card of Tabel"
+        [CardInfo]="card"
+        (CardSelected)="cardSelected($event)"
+        (CardUnSelected)="cardUnSelected($event)"
+      >
+      </app-card>
+    </div>
+  </div>
+  @if (Found.length > 0) {
+  <div class="founds-container">
+    <div class="found-count">Found {{ Found.length }}</div>
+    <div class="founds-row" *ngFor="let cards of Found">
+      <app-card *ngFor="let card of cards" [CardInfo]="card"> </app-card>
+    </div>
+  </div>
+  }
+</div>
+<div class="usertime">
+  <a href="#" (click)="changeUserName()" class="user">{{ UserName }}</a>
+  <div class="time">{{ Time }}</div>
+</div>
+
+<app-dialog
+  [Visible]="showDialog"
+  [Message]="dialogMessage"
+  (click)="showDialog = false"
+></app-dialog>
+
+@if(ShowToplist){
+<div (click)="ShowToplist = false" class="center-screen">
+  <div class="toplist dialog">
+    <table>
+      @for (item of Toplist; track $index) {
+      <tr>
+        <td>{{ $index + 1 }}.</td>
+        <td class="name">{{ item.user }}</td>
+        <td>{{ formatTime(item.time) }}</td>
+      </tr>
+      }
+    </table>
+  </div>
+</div>
+}

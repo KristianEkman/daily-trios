@@ -12,12 +12,12 @@ export class RandomService {
     this.rng = seedrandom(Utils.getToday());
   }
 
-  setSeed() {
+  setTodaySeed() {
     this.rng = seedrandom(Utils.getToday());
   }
 
-  removeSeed() {
-    this.rng = seedrandom();
+  setSeed(seed: string) {
+    this.rng = seedrandom(seed);
   }
 
   getRandom() {
