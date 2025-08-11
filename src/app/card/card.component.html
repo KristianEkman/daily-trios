@@ -3,8 +3,10 @@
   (click)="clicked()"
 >
   <div class="card-images">
-    <img [src]="ImagePath()" />
-    <img *ngIf="CardInfo.Count > 1" [src]="ImagePath()" />
-    <img *ngIf="CardInfo.Count > 2" [src]="ImagePath()" />
+    <img
+      [src]="ImagePath()"
+      [alt]="''"
+      *ngFor="let i of [].constructor(CardInfo.Count)"
+    />
   </div>
 </div>

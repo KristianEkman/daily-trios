@@ -48,6 +48,22 @@
   gap: 0.3vw;
   background-color: #ccc;
   padding: 0.3vw;
+  animation: ripple 180ms ease-out;
+}
+@keyframes ripple {
+  from {
+    filter: brightness(0.98);
+    transform: scale(0.998);
+  }
+  to {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+}
+.confetti {
+  position: fixed;
+  pointer-events: none;
+  inset: 0;
 }
 
 .usertime {

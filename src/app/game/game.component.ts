@@ -8,6 +8,14 @@ import { Utils } from '../utils';
 import { RandomService } from '../randoms';
 import { Database, get, getDatabase, ref, set } from '@angular/fire/database';
 import { ActivatedRoute } from '@angular/router';
+import {
+  trigger,
+  transition,
+  style,
+  animate,
+  query,
+  stagger,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +23,26 @@ import { ActivatedRoute } from '@angular/router';
   imports: [CardComponent, CommonModule, DialogComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
+  animations: [
+    trigger('list', [
+      transition(':enter', [
+        query(
+          'app-card',
+          [
+            style({ opacity: 0, transform: 'translateY(10px) scale(.98)' }),
+            stagger(
+              50,
+              animate(
+                '160ms ease-out',
+                style({ opacity: 1, transform: 'translateY(0) scale(1)' })
+              )
+            ),
+          ],
+          { optional: true }
+        ),
+      ]),
+    ]),
+  ],
 })
 export class GameComponent {
   private database: Database = inject(Database);
@@ -60,6 +88,7 @@ export class GameComponent {
       this.Toplist = topList;
     });
     this.ShowToplist = true;
+    this.fireConfetti();
   }
 
   storeResult(user: string, gameId: string, seconds: number) {
@@ -154,6 +183,11 @@ export class GameComponent {
     }
   }
 
+  private shake(cards: CardInfo[]) {
+    cards.forEach((c) => ((c as any).Shake = true));
+    setTimeout(() => cards.forEach((c) => ((c as any).Shake = false)), 450);
+  }
+
   cardSelected(card: CardInfo) {
     const cards = this.SelectedCards;
     cards.push(card);
@@ -173,6 +207,7 @@ export class GameComponent {
             clearInterval(this.TimeHandle);
             this.dialogMessage = 'Good! Your time:' + this.Time;
             this.showDialog = true;
+            this.fireConfetti(1200);
           }
         } else {
           // the set already exists
@@ -184,8 +219,104 @@ export class GameComponent {
           });
         }
         this.SelectedCards = [];
+      } else {
+        // wrong set -> shake selected and clear
+        this.shake(cards);
+        setTimeout(() => {
+          this.SelectedCards.forEach((c) => (c.Selected = false));
+          this.SelectedCards = [];
+        }, 300);
       }
     }
+  }
+
+  private fireConfetti(durationMs = 3000) {
+    const canvas = document.getElementById(
+      'confetti-canvas'
+    ) as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d')!;
+    let w = (canvas.width = window.innerWidth);
+    let h = (canvas.height = window.innerHeight);
+
+    const N = 180;
+    const originX = w / 2;
+    const originY = h * 0.9; // center lower screen
+    const g = 500; // gravity (px/s^2) downward
+    const speedMin = 200,
+      speedMax = 700; // initial launch speed (px/s)
+    const spreadDeg = 55; // angle spread around straight up
+    const rad = (deg: number) => (deg * Math.PI) / 180;
+
+    type Piece = {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      r: number;
+      rot: number;
+      vr: number;
+      hue: number;
+    };
+
+    // Build pieces with upward velocities at different angles
+    const pieces: Piece[] = Array.from({ length: N }).map((_, i) => {
+      const angle = -90 + (Math.random() * 2 - 1) * spreadDeg; // around straight up
+      const speed = speedMin + Math.random() * (speedMax - speedMin);
+      return {
+        x: originX,
+        y: originY,
+        vx: Math.cos(rad(angle)) * speed, // horizontal component
+        vy: Math.sin(rad(angle)) * speed, // vertical (negative = up)
+        r: 2 + Math.random() * 4,
+        rot: Math.random() * Math.PI,
+        vr: (-0.2 + Math.random() * 0.4) * 4, // faster spin
+        hue: Math.random() * 360,
+      };
+    });
+
+    const fired = performance.now();
+    let last = fired;
+    let opacity = 1;
+
+    const drawFrame = (t: number) => {
+      const dt = Math.min(32, t - last) / 1000; // seconds, clamp long frames
+      last = t;
+
+      // physics
+      for (const p of pieces) {
+        p.vy += g * dt; // gravity pulls down (+y)
+        p.x += p.vx * dt;
+        p.y += p.vy * dt;
+        p.rot += p.vr * dt;
+      }
+
+      // fade out over time
+      const elapsed = t - fired;
+      opacity = Math.max(0, 1 - elapsed / durationMs);
+
+      // draw
+      ctx.clearRect(0, 0, w, h);
+      for (const p of pieces) {
+        // optional: tiny air drag feel
+        // p.vx *= (1 - 0.05*dt); p.vy *= (1 - 0.02*dt);
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = `hsla(${p.hue}, 90%, 60%, ${opacity})`;
+        ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
+        ctx.restore();
+      }
+
+      if (elapsed < durationMs) {
+        requestAnimationFrame(drawFrame);
+      } else {
+        ctx.clearRect(0, 0, w, h);
+      }
+    };
+
+    requestAnimationFrame(drawFrame);
   }
 
   getId(cards: CardInfo[]) {
