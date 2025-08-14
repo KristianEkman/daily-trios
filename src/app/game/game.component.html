@@ -26,7 +26,8 @@
   <div class="founds-container">
     <div class="found-count">Found {{ Found.length }}</div>
     <div class="founds-row" *ngFor="let cards of Found">
-      <app-card *ngFor="let card of cards" [CardInfo]="card"> </app-card>
+      <app-card *ngFor="let card of cards" [CardInfo]="card" [Found]="true">
+      </app-card>
     </div>
   </div>
   }

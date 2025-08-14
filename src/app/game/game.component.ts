@@ -225,7 +225,7 @@ export class GameComponent {
         setTimeout(() => {
           this.SelectedCards.forEach((c) => (c.Selected = false));
           this.SelectedCards = [];
-        }, 300);
+        }, 500);
       }
     }
   }

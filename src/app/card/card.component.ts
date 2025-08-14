@@ -32,21 +32,6 @@ import {
         ),
       ]),
     ]),
-    // flip on select
-    trigger('selectFlip', [
-      state('off', style({ transform: 'rotateY(0)' })),
-      state('on', style({ transform: 'rotateY(180deg)' })),
-      transition('off <=> on', animate('180ms ease-out')),
-    ]),
-    // hint blink (smooth pulse rather than hard flash)
-    trigger('pulseHint', [
-      state('off', style({})),
-      state(
-        'on',
-        style({ boxShadow: '0 0 0 6px rgba(255, 230, 0, .55) inset' })
-      ),
-      transition('off <=> on', animate('300ms ease-in-out')),
-    ]),
     // wrong-set shake
     trigger('shake', [
       state('off', style({})),
@@ -66,15 +51,12 @@ export class CardComponent {
   CardSelected = new EventEmitter<CardInfo>();
   @Output()
   CardUnSelected = new EventEmitter<CardInfo>();
+  @Input()
+  Found = false;
 
   // expose animation states via host bindings
   @HostBinding('@dealIn') dealIn = true;
-  @HostBinding('@selectFlip') get flip() {
-    return this.CardInfo?.Selected ? 'on' : 'off';
-  }
-  @HostBinding('@pulseHint') get pulse() {
-    return this.CardInfo?.Blink ? 'on' : 'off';
-  }
+
   @HostBinding('@shake') get shake() {
     return (this.CardInfo as any)?.Shake ? 'on' : 'off';
   }
@@ -85,6 +67,7 @@ export class CardComponent {
   }
 
   clicked() {
+    if (this.Found) return;
     this.CardInfo.Selected = !this.CardInfo.Selected;
     if (this.CardInfo.Selected) {
       this.CardSelected.emit(this.CardInfo);
