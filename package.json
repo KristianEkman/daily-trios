@@ -9,8 +9,7 @@
     "test": "ng test",
     "deploy-build": "ng build --output-path docs --base-href /daily-set/",
     "move-build": "mv docs/browser/* docs",
-    "do-deploy": "ng deploy --base-href /daily-set/",
-    "deploy": "npm run deploy-build && npm run move-build && npm run do-deploy"
+    "deploy": "npm run deploy-build && npm run move-build && git add . && git commit -m \"Deploy\" && git push"
   },
   "private": true,
   "dependencies": {
