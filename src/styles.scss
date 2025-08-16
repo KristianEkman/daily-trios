@@ -42,13 +42,13 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.55rem 0.9rem;
+  padding: 0.55rem 0.5rem;
   border-radius: 9999px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
   font: 500 14px/1 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  font-size: 1em;
+  font-size: 0.8em;
   cursor: pointer;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04), 0 1px 6px rgba(0, 0, 0, 0.06);
   transition: transform 140ms ease, box-shadow 140ms ease,
