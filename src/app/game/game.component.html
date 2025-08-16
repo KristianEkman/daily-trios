@@ -1,10 +1,25 @@
 <div class="app-container" @list>
   <div class="buttons">
-    <button (click)="startDaily()">Daily</button>
-    <button (click)="seedRandomAndStart()">Random</button>
-    <button (click)="shuffleTable()">Shuffle</button>
-    <button (click)="giveHint()">Hint</button>
-    <button (click)="showToplist()">Toplist</button>
+    <button class="btn" (click)="startDaily()">
+      Daily
+      <img class="icon" src="icons/new-daily.svg" alt="" />
+    </button>
+    <button class="btn" (click)="seedRandomAndStart()">
+      Random
+      <img class="icon" src="icons/random.svg" alt="" />
+    </button>
+    <button class="btn" (click)="shuffleTable()">
+      Shuffle
+      <img class="icon" src="icons/shuffle.svg" alt="" />
+    </button>
+    <button class="btn" (click)="giveHint()">
+      Hint
+      <img class="icon" src="icons/hint.svg" alt="" />
+    </button>
+    <button class="btn" (click)="showToplist()">
+      Toplist
+      <img class="icon" src="icons/toplist.svg" alt="" />
+    </button>
   </div>
 
   <div class="tabel">

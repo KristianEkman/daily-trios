@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="24" height="24" viewBox="0 0 24 24"
+     fill="none" stroke="currentColor" stroke-width="1.8"
+     stroke-linecap="round" stroke-linejoin="round"
+     role="img" aria-labelledby="title desc">
+  <title id="title">Start new daily game</title>
+  <desc id="desc">Calendar with centered play symbol</desc>
+
+  <!-- Calendar frame -->
+  <rect x="3" y="4" width="18" height="16" rx="3"/>
+  <!-- Binding rings -->
+  <path d="M8 2v4M16 2v4"/>
+  <!-- Top bar separator -->
+  <path d="M3 8h18"/>
+
+  <!-- Play triangle moved up by 1px -->
+  <path d="M10 10l6 4-6 4z" fill="currentColor" stroke="none"/>
+</svg>

@@ -1,0 +1,16 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24" height="24"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+  role="img" aria-labelledby="title desc">
+  <title id="title">Hint</title>
+  <desc id="desc">Filled light bulb with a plus sign cut out in the center.</desc>
+
+  <path fill-rule="evenodd" clip-rule="evenodd" d="
+    M12 2a7 7 0 0 0-4 12.7V17a3 3 0 0 0 1.8 2.7L10 21h4l.2-1.3A3 3 0 0 0 16 17v-2.3A7 7 0 0 0 12 2z
+    M10 22h4v1h-4v-1z
+
+    M12 5c.41 0 .75.34.75.75V8h2.25c.41 0 .75.34.75.75s-.34.75-.75.75H12.75v2.25c0 .41-.34.75-.75.75s-.75-.34-.75-.75V9.5H9a.75.75 0 0 1 0-1.5h2.25V5.75c0-.41.34-.75.75-.75z
+  "/>
+</svg>
