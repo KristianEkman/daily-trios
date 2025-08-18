@@ -1,4 +1,9 @@
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  inject,
+} from '@angular/core';
 import { Deck } from '../deck';
 import { CardComponent } from '../card/card.component';
 import { CommonModule } from '@angular/common';
@@ -7,7 +12,7 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { Utils } from '../utils';
 import { RandomService } from '../randoms';
 import { Database, get, getDatabase, ref, set } from '@angular/fire/database';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   trigger,
   transition,
@@ -15,6 +20,7 @@ import {
   animate,
   query,
   stagger,
+  keyframes,
 } from '@angular/animations';
 
 @Component({
@@ -29,14 +35,30 @@ import {
         query(
           'app-card',
           [
-            style({ opacity: 0, transform: 'translateY(10px) scale(.98)' }),
-            stagger(
-              50,
+            // start them all from the same origin
+            style({
+              opacity: 0,
+              transformOrigin: '0% 100%',
+            }),
+            stagger(100, [
               animate(
-                '160ms ease-out',
-                style({ opacity: 1, transform: 'translateY(0) scale(1)' })
-              )
-            ),
+                '250ms linear',
+                keyframes([
+                  // use CSS vars so you can easily change the deal origin
+                  style({
+                    opacity: 0.5,
+                    transform:
+                      'translate3d(var(--deal-x, -60vw), var(--deal-y, 60vh), 0) scale(.9) rotate(-20deg)',
+                    offset: 0,
+                  }),
+                  style({
+                    opacity: 1,
+                    transform: 'translate3d(0, 0, 0) scale(1) rotate(0)',
+                    offset: 1,
+                  }),
+                ])
+              ),
+            ]),
           ],
           { optional: true }
         ),
@@ -67,15 +89,20 @@ export class GameComponent {
   Toplist: { user: string; time: number }[] = [];
   ShowToplist = false;
   GameId = '';
+  RenderGrid = true;
 
   constructor(
     private randomService: RandomService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private elementRef: ElementRef<HTMLElement>,
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.setUserName();
-    route.params.subscribe((r) => {
+    this.route.params.subscribe((r) => {
       const id = r['id'];
       if (!id) {
+        console.log({ id });
         this.startDaily();
       } else {
         this.startRandom(id);
@@ -441,8 +468,54 @@ export class GameComponent {
     }, 500);
   }
 
-  shuffleTable() {
+  shuffleCardsTable() {
+    const grid = this.elementRef.nativeElement.querySelector(
+      '.grid'
+    ) as HTMLElement;
+    if (!grid) return;
+
+    // 1) FIRST: measure current positions
+    const cards = Array.from(
+      grid.querySelectorAll('app-card')
+    ) as HTMLElement[];
+    const firstRects = new Map<HTMLElement, DOMRect>();
+    cards.forEach((el) => firstRects.set(el, el.getBoundingClientRect()));
+
+    // 2) Update data -> DOM reorders
     this.Tabel = this.shuffelArray(this.Tabel);
+    this.cdr.detectChanges();
+
+    // 3) LAST: after DOM paints, measure new positions
+    requestAnimationFrame(() => {
+      const movedCards = Array.from(
+        grid.querySelectorAll('app-card')
+      ) as HTMLElement[];
+
+      movedCards.forEach((el) => {
+        const first = firstRects.get(el);
+        if (!first) return;
+
+        const last = el.getBoundingClientRect();
+        const dx = first.left - last.left;
+        const dy = first.top - last.top;
+
+        // 4) INVERT: jump back to where it WAS
+        el.style.willChange = 'transform';
+        el.style.transform = `translate(${dx}px, ${dy}px)`;
+
+        // 5) PLAY: then animate to identity (its new place)
+        requestAnimationFrame(() => {
+          el.style.transition = 'transform 1000ms cubic-bezier(.2,.8,.2,1)';
+          el.style.transform = '';
+          const cleanup = () => {
+            el.style.transition = '';
+            el.style.willChange = '';
+            el.removeEventListener('transitionend', cleanup);
+          };
+          el.addEventListener('transitionend', cleanup);
+        });
+      });
+    });
   }
 
   changeUserName() {
@@ -469,9 +542,13 @@ export class GameComponent {
     this.UserName = name;
   }
 
-  seedRandomAndStart() {
+  navigateToRandom() {
     const seed = Math.floor(Math.random() * 1000).toString();
-    location.href = `game/${seed}`;
+    this.router.navigateByUrl(`game/${seed}`);
+  }
+
+  navigateToDaily() {
+    this.router.navigateByUrl('/');
   }
 
   startRandom(id: string) {
@@ -488,24 +565,28 @@ export class GameComponent {
   }
 
   startGame() {
-    this.SelectedCards = [];
-    this.Tabel = [];
-    this.Found = [];
-    this.FoundIds = [];
-    this.ExistingIds = [];
-    this.SetCount = 0;
-    this.Time = '00:00';
-    this.TotalSeconds = 0;
-    this.HintCount = 0;
-    this.Started = new Date().getTime();
+    this.RenderGrid = false;
+    setTimeout(() => {
+      this.SelectedCards = [];
+      this.Tabel = [];
+      this.Found = [];
+      this.FoundIds = [];
+      this.ExistingIds = [];
+      this.SetCount = 0;
+      this.Time = '00:00';
+      this.TotalSeconds = 0;
+      this.HintCount = 0;
+      this.Started = new Date().getTime();
 
-    this.showDialog = false;
-    this.dialogMessage = '';
-    this.Today = Utils.getToday();
-    this.Deck = new Deck();
-    this.Deck.Cards = this.shuffelArray(this.Deck.Cards);
-    this.setTable();
-    this.countSets();
-    this.startTime();
+      this.showDialog = false;
+      this.dialogMessage = '';
+      this.Today = Utils.getToday();
+      this.Deck = new Deck();
+      this.Deck.Cards = this.shuffelArray(this.Deck.Cards);
+      this.setTable();
+      this.countSets();
+      this.startTime();
+      this.RenderGrid = true;
+    });
   }
 }

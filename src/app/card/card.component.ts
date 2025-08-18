@@ -58,7 +58,7 @@ export class CardComponent {
   @HostBinding('@dealIn') dealIn = true;
 
   @HostBinding('@shake') get shake() {
-    return (this.CardInfo as any)?.Shake ? 'on' : 'off';
+    return this.CardInfo?.Shake ? 'on' : 'off';
   }
 
   ImagePath(): string {

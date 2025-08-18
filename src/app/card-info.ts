@@ -8,4 +8,5 @@ export interface CardInfo {
   Id: number;
   Selected: boolean;
   Blink: boolean;
+  Shake?: boolean;
 }

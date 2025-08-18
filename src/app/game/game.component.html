@@ -1,14 +1,14 @@
-<div class="app-container" @list>
+<div class="app-container">
   <div class="buttons">
-    <button class="btn" (click)="startDaily()">
+    <button class="btn" (click)="navigateToDaily()">
       Daily
       <img class="icon" src="icons/new-daily.svg" alt="" />
     </button>
-    <button class="btn" (click)="seedRandomAndStart()">
+    <button class="btn" (click)="navigateToRandom()">
       Random
       <img class="icon" src="icons/random.svg" alt="" />
     </button>
-    <button class="btn" (click)="shuffleTable()">
+    <button class="btn" (click)="shuffleCardsTable()">
       Shuffle
       <img class="icon" src="icons/shuffle.svg" alt="" />
     </button>
@@ -27,12 +27,13 @@
       <span>Find the {{ SetCount }} sets</span>
       <span>{{ GameType == "random" ? "Id: " + GameId : Today }}</span>
     </div>
-    <div class="grid">
+    <div *ngIf="RenderGrid" class="grid" @list>
       <app-card
         *ngFor="let card of Tabel"
         [CardInfo]="card"
         (CardSelected)="cardSelected($event)"
         (CardUnSelected)="cardUnSelected($event)"
+        [attr.id]="card.Id"
       >
       </app-card>
     </div>
@@ -62,6 +63,9 @@
 <div (click)="ShowToplist = false" class="center-screen">
   <div class="toplist dialog">
     <table>
+      @if(Toplist.length == 0){
+        <td>No results today yet.</td>
+      }
       @for (item of Toplist; track $index) {
       <tr>
         <td>{{ $index + 1 }}.</td>

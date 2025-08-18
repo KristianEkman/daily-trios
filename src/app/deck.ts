@@ -1,6 +1,5 @@
 import { CardInfo } from './card-info';
 import { Color, Filling, Shape } from './types';
-import { Utils } from './utils';
 
 export class Deck {
   Cards: CardInfo[] = [];
@@ -28,6 +27,7 @@ export class Deck {
               Id: id,
               Selected: false,
               Blink: false,
+              Shake: false,
             };
             cards.push(info);
             id++;
