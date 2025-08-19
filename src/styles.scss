@@ -6,9 +6,9 @@
   --lamp-warm: rgba(255, 240, 200, 0.35); /* warm lamp tint */
 
   position: relative;
-  min-height: 60vh; /* or 100vh if used on <body> */
+  min-height: 100vh; /* or 100vh if used on <body> */
   border-radius: 28px;
-  overflow: hidden;
+  overflow: auto;
 
   /* Layered gradients: hotspot → edge vignette → fiber-ish noise → base felt */
   background:
