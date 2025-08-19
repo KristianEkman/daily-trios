@@ -113,9 +113,8 @@ export class GameComponent {
   showToplist() {
     this.getTopList(this.Today).then((topList) => {
       this.Toplist = topList;
+      this.ShowToplist = true;
     });
-    this.ShowToplist = true;
-    this.fireConfetti();
   }
 
   storeResult(user: string, gameId: string, seconds: number) {

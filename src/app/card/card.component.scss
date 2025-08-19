@@ -1,5 +1,5 @@
 .card {
-  background-color: white;
+  background-color: #f6f6f6;
   width: 13vw;
   padding: 1vw;
   margin: 0 auto;
@@ -21,7 +21,7 @@
 
 @keyframes blinker {
   50% {
-    background-color: rgb(242, 242, 151);
+    background-color: rgb(255, 183, 0);
   }
 }
 

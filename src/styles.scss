@@ -1,19 +1,69 @@
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #bfefc3;
+.poker-felt {
+  /* Tweak these to taste */
+  --felt-light: #1b8a4b;
+  --felt-mid: #0f6a36;
+  --felt-dark: #0b542a;
+  --lamp-warm: rgba(255, 240, 200, 0.35); /* warm lamp tint */
+
+  position: relative;
+  min-height: 60vh; /* or 100vh if used on <body> */
+  border-radius: 28px;
+  overflow: hidden;
+
+  /* Layered gradients: hotspot → edge vignette → fiber-ish noise → base felt */
+  background:
+    /* lamp hotspot (top/center) */ radial-gradient(
+      75% 45% at 50% 10%,
+      var(--lamp-warm) 0%,
+      rgba(255, 240, 200, 0) 55%
+    ),
+    /* edge vignette to darken the perimeter */
+      radial-gradient(
+        120% 95% at 50% 55%,
+        rgba(0, 0, 0, 0) 58%,
+        rgba(0, 0, 0, 0.6) 100%
+      ),
+    /* subtle “fiber” texture (very low contrast) 
+      repeating-conic-gradient(
+        from 0deg at 50% 50%,
+        rgba(255, 255, 255, 0.015) 0 12deg,
+        rgba(0, 0, 0, 0.015) 12deg 24deg
+      ),*/
+      /* base felt shading */
+      linear-gradient(
+        165deg,
+        var(--felt-light) 0%,
+        var(--felt-mid) 55%,
+        var(--felt-dark) 100%
+      );
+
+  background-blend-mode: soft-light, multiply, overlay, normal;
+
+  /* Extra depth */
+  box-shadow: inset 0 30px 80px rgba(0, 0, 0, 0.35),
+    inset 0 -20px 60px rgba(0, 0, 0, 0.45), 0 18px 60px rgba(0, 0, 0, 0.24);
 }
 
-.dialog {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40vw;
-  height: 40vh;
-  border-radius: 8px;
-  background-color: rgb(255, 254, 237);
-  border: 1px solid #5f673b;
-  font-size: 2em;
-  opacity: 0.9;
+/* Optional: make the whole page look like the table */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  color: #cfcfcf;
+}
+
+a,
+a:visited {
+  color: #cfcfcf;
+}
+
+body.poker-felt {
+  border-radius: 0;
+  min-height: 100vh;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .center-screen {
@@ -69,4 +119,40 @@ body {
 .btn:focus-visible {
   outline: 2px solid transparent;
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ring);
+}
+
+.poker-btn {
+  font-family: "Segoe UI", sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+
+  color: #fff;
+  background: linear-gradient(145deg, #d4af37, #b8860b); /* gold gradient */
+  border: 2px solid #e6c85c;
+
+  padding: 0.5em 0.5em;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  height: 2.5em;
+  cursor: pointer;
+
+  /* depth + glow */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.25), 0 0 15px rgba(255, 215, 0, 0.4);
+
+  transition: all 0.18s ease;
+}
+
+.poker-btn:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3), 0 0 22px rgba(255, 215, 0, 0.6);
+}
+
+.poker-btn:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), inset 0 2px 6px rgba(0, 0, 0, 0.35);
 }

@@ -1,13 +1,11 @@
 .app-container {
+  padding: 1em;
 }
 
 .buttons {
   display: flex;
   gap: 2vw;
   padding-bottom: 2vh;
-  button {
-    height: 2em;
-  }
 }
 
 .text {
@@ -49,7 +47,6 @@
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 0.3vw;
-  background-color: #bfefc3;
   padding: 0.3vw;
   animation: ripple 180ms ease-out;
 }

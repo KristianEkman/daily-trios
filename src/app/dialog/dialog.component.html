@@ -1,5 +1,6 @@
-<div *ngIf="Visible" class="center-screen">
+<div *ngIf="Visible" class="dialog-backdrop">
   <div class="dialog">
     {{ Message }}
+    <ng-content></ng-content>
   </div>
 </div>
