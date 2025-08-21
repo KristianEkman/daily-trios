@@ -1,7 +1,7 @@
 .card {
   background-color: #f6f6f6;
   border-radius: 5px;
-  min-width: 150px;
+  min-width: 120px;
 
   // subtle hover lift
   @media (hover: hover) and (pointer: fine) {
@@ -29,13 +29,13 @@
 
 .card-images {
   display: flex;
-  height: 70px;
+  height: 55px;
   justify-content: center;
   align-items: center;
 }
 
 .card-images img {
-  height: 20px;
+  height: 15px;
   width: auto;
   transform: rotate(90deg);
   transform-origin: center center;
