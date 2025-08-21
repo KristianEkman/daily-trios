@@ -2,21 +2,35 @@
   padding: 1em;
 }
 
+.card-container {
+  display: flex;
+  @media (orientation: landscape) {
+    flex-direction: row;
+  }
+  @media (orientation: portrait) {
+    flex-direction: column;
+  }
+}
+
+.table {
+  @media (orientation: landscape) {
+    max-width: 50vw;
+  }
+  @media (orientation: portrait) {
+  }
+}
+
 .buttons {
   display: flex;
-  gap: 2vw;
+  gap: 1vw;
   padding-bottom: 2vh;
 }
 
-.text {
-  font-size: 1.5em;
-}
-
-.tabel {
-  float: left;
-}
-
 .founds-container {
+  @media (orientation: portrait) {
+    margin-top: 10px;
+  }
+
   .found-count {
     display: block;
     text-align: center;
@@ -26,7 +40,6 @@
   }
   font-size: x-large;
   margin-left: 1em;
-  float: left;
   scale: 0.6;
   transform-origin: top left;
 }
@@ -46,20 +59,9 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 0.3vw;
-  padding: 0.3vw;
-  animation: ripple 180ms ease-out;
+  gap: 3px;
 }
-@keyframes ripple {
-  from {
-    filter: brightness(0.98);
-    transform: scale(0.998);
-  }
-  to {
-    filter: brightness(1);
-    transform: scale(1);
-  }
-}
+
 .confetti {
   position: fixed;
   pointer-events: none;
@@ -70,9 +72,6 @@
   position: absolute;
   bottom: 1em;
   right: 1em;
-}
-
-.user {
 }
 
 .time {

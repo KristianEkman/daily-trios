@@ -1,9 +1,7 @@
 .card {
   background-color: #f6f6f6;
-  width: 13vw;
-  padding: 1vw;
-  margin: 0 auto;
-  border-radius: 0.5vw;
+  border-radius: 5px;
+  min-width: 150px;
 
   // subtle hover lift
   @media (hover: hover) and (pointer: fine) {
@@ -31,15 +29,14 @@
 
 .card-images {
   display: flex;
+  height: 70px;
   justify-content: center;
-  padding-top: 2vw;
-  padding-bottom: 2vw;
+  align-items: center;
 }
 
 .card-images img {
-  width: 5vw;
-  height: auto;
-  display: block;
+  height: 20px;
+  width: auto;
   transform: rotate(90deg);
-  margin: -0.3vw;
+  transform-origin: center center;
 }

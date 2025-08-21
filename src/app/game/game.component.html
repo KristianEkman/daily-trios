@@ -21,36 +21,35 @@
       <img class="icon" src="icons/toplist.svg" alt="" />
     </button>
   </div>
-
-  <div class="tabel">
-    <div class="sub-header">
-      <span>Find the {{ SetCount }} sets</span>
-      <span>{{ GameType == "random" ? "Id: " + GameId : Today }}</span>
+  <div class="card-container">
+    <div class="tabel">
+      <div class="sub-header">
+        <span>Find the {{ SetCount }} sets</span>
+        <span>{{ GameType == "random" ? "Id: " + GameId : Today }}</span>
+      </div>
+      <div *ngIf="RenderGrid" class="grid" @list>
+        <app-card
+          *ngFor="let card of Tabel"
+          [CardInfo]="card"
+          (CardSelected)="cardSelected($event)"
+          (CardUnSelected)="cardUnSelected($event)"
+          [attr.id]="card.Id"
+        >
+        </app-card>
+      </div>
     </div>
-    <div *ngIf="RenderGrid" class="grid" @list>
-      <app-card
-        *ngFor="let card of Tabel"
-        [CardInfo]="card"
-        (CardSelected)="cardSelected($event)"
-        (CardUnSelected)="cardUnSelected($event)"
-        [attr.id]="card.Id"
-      >
-      </app-card>
+    <div class="founds-container">
+      <div class="found-count">Found {{ Found.length }}</div>
+      <div class="founds-row" *ngFor="let cards of Found">
+        <app-card *ngFor="let card of cards" [CardInfo]="card" [Found]="true">
+        </app-card>
+      </div>
     </div>
   </div>
-  @if (Found.length > 0) {
-  <div class="founds-container">
-    <div class="found-count">Found {{ Found.length }}</div>
-    <div class="founds-row" *ngFor="let cards of Found">
-      <app-card *ngFor="let card of cards" [CardInfo]="card" [Found]="true">
-      </app-card>
-    </div>
+  <div class="usertime">
+    <a href="#" (click)="changeUserName()" class="user">{{ UserName }}</a>
+    <div class="time">{{ Time }}</div>
   </div>
-  }
-</div>
-<div class="usertime">
-  <a href="#" (click)="changeUserName()" class="user">{{ UserName }}</a>
-  <div class="time">{{ Time }}</div>
 </div>
 
 <app-dialog
