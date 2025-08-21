@@ -1,14 +1,14 @@
 .card {
+  display: block;
   background-color: #f6f6f6;
   border-radius: 5px;
-  min-width: 100px;
 
   // subtle hover lift
   @media (hover: hover) and (pointer: fine) {
     transition: transform 140ms ease, box-shadow 140ms ease;
     &:hover {
       transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
     }
   }
 }
@@ -24,29 +24,26 @@
 }
 
 .selected {
-  background-color: rgb(216, 217, 238) !important;
+  background-color: rgb(186, 189, 238) !important;
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
 }
 
 .card-images {
   display: flex;
-  @media (orientation: landscape) {
-    height: calc(50vw / 6);
-  }
-  @media (orientation: portrait) {
-    height: calc(100vw / 7);
-  }
+  gap: 14px;
   justify-content: center;
   align-items: center;
+  padding: 14px;
 }
 
 .card-images img {
   @media (orientation: landscape) {
-    height: calc(50vw / 20);
+    width: calc(50vw / 20);
   }
   @media (orientation: portrait) {
-    height: calc(100vw / 25);
+    width: calc(100vw / 25);
   }
-  width: auto;
-  transform: rotate(90deg);
+  height: auto;
   transform-origin: center center;
 }

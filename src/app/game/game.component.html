@@ -40,9 +40,11 @@
     </div>
     <div class="founds-container">
       <div class="found-count">Found {{ Found.length }}</div>
-      <div class="founds-row" *ngFor="let cards of Found">
-        <app-card *ngFor="let card of cards" [CardInfo]="card" [Found]="true">
-        </app-card>
+      <div class="grid">
+        @for (cards of Found; track $index) { @for (card of cards; track
+        card.Id) {
+        <app-card [CardInfo]="card" [Found]="true" />
+        } }
       </div>
     </div>
   </div>
