@@ -27,4 +27,13 @@ export class RandomService {
   getRandomInt(min: number, max: number) {
     return Math.floor(this.rng() * (max - min + 1)) + min;
   }
+
+  shuffelArray<T>(array: T[]) {
+    const shuffled = array.slice(); // Make a copy
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = this.getRandomInt(0, i);
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
 }

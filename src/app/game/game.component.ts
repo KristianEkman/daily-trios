@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   inject,
+  ViewChild,
 } from '@angular/core';
 import { Deck } from '../deck';
 import { CardComponent } from '../card/card.component';
@@ -13,58 +14,14 @@ import { Utils } from '../utils';
 import { RandomService } from '../randoms';
 import { Database, get, getDatabase, ref, set } from '@angular/fire/database';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  trigger,
-  transition,
-  style,
-  animate,
-  query,
-  stagger,
-  keyframes,
-} from '@angular/animations';
+import { CardsGridComponent } from '../cards-grid/cards-grid.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CardComponent, CommonModule, DialogComponent],
+  imports: [CommonModule, DialogComponent, CardsGridComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
-  animations: [
-    trigger('list', [
-      transition(':enter', [
-        query(
-          'app-card',
-          [
-            // start them all from the same origin
-            style({
-              opacity: 0,
-              transformOrigin: '0% 100%',
-            }),
-            stagger(100, [
-              animate(
-                '250ms linear',
-                keyframes([
-                  // use CSS vars so you can easily change the deal origin
-                  style({
-                    opacity: 0.5,
-                    transform:
-                      'translate3d(var(--deal-x, -60vw), var(--deal-y, 60vh), 0) scale(.9) rotate(-20deg)',
-                    offset: 0,
-                  }),
-                  style({
-                    opacity: 1,
-                    transform: 'translate3d(0, 0, 0) scale(1) rotate(0)',
-                    offset: 1,
-                  }),
-                ])
-              ),
-            ]),
-          ],
-          { optional: true }
-        ),
-      ]),
-    ]),
-  ],
 })
 export class GameComponent {
   private database: Database = inject(Database);
@@ -94,15 +51,12 @@ export class GameComponent {
   constructor(
     private randomService: RandomService,
     private route: ActivatedRoute,
-    private elementRef: ElementRef<HTMLElement>,
-    private cdr: ChangeDetectorRef,
     private router: Router
   ) {
     this.setUserName();
     this.route.params.subscribe((r) => {
       const id = r['id'];
       if (!id) {
-        console.log({ id });
         this.startDaily();
       } else {
         this.startRandom(id);
@@ -110,11 +64,17 @@ export class GameComponent {
     });
   }
 
+  @ViewChild(CardsGridComponent) cardsGrid!: CardsGridComponent;
+
   showToplist() {
     this.getTopList(this.Today).then((topList) => {
       this.Toplist = topList;
       this.ShowToplist = true;
     });
+  }
+
+  shuffleCardsTable() {
+    this.cardsGrid.shuffleCardsTable();
   }
 
   storeResult(user: string, gameId: string, seconds: number) {
@@ -391,16 +351,7 @@ export class GameComponent {
     const card1 = this.Tabel[10];
     const card2 = this.Tabel[0];
     this.createSetOrAddRandom(card1, card2);
-    this.Tabel = this.shuffelArray(this.Tabel);
-  }
-
-  shuffelArray<T>(array: T[]) {
-    const shuffled = array.slice(); // Make a copy
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = this.randomService.getRandomInt(0, i);
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
+    this.Tabel = this.randomService.shuffelArray(this.Tabel);
   }
 
   createSetOrAddRandom(card1: CardInfo, card2: CardInfo) {
@@ -467,56 +418,6 @@ export class GameComponent {
     }, 500);
   }
 
-  shuffleCardsTable() {
-    const grid = this.elementRef.nativeElement.querySelector(
-      '.grid'
-    ) as HTMLElement;
-    if (!grid) return;
-
-    // 1) FIRST: measure current positions
-    const cards = Array.from(
-      grid.querySelectorAll('app-card')
-    ) as HTMLElement[];
-    const firstRects = new Map<HTMLElement, DOMRect>();
-    cards.forEach((el) => firstRects.set(el, el.getBoundingClientRect()));
-
-    // 2) Update data -> DOM reorders
-    this.Tabel = this.shuffelArray(this.Tabel);
-    this.cdr.detectChanges();
-
-    // 3) LAST: after DOM paints, measure new positions
-    requestAnimationFrame(() => {
-      const movedCards = Array.from(
-        grid.querySelectorAll('app-card')
-      ) as HTMLElement[];
-
-      movedCards.forEach((el) => {
-        const first = firstRects.get(el);
-        if (!first) return;
-
-        const last = el.getBoundingClientRect();
-        const dx = first.left - last.left;
-        const dy = first.top - last.top;
-
-        // 4) INVERT: jump back to where it WAS
-        el.style.willChange = 'transform';
-        el.style.transform = `translate(${dx}px, ${dy}px)`;
-
-        // 5) PLAY: then animate to identity (its new place)
-        requestAnimationFrame(() => {
-          el.style.transition = 'transform 1000ms cubic-bezier(.2,.8,.2,1)';
-          el.style.transform = '';
-          const cleanup = () => {
-            el.style.transition = '';
-            el.style.willChange = '';
-            el.removeEventListener('transitionend', cleanup);
-          };
-          el.addEventListener('transitionend', cleanup);
-        });
-      });
-    });
-  }
-
   changeUserName() {
     let name = prompt('What is your name?');
     if (name) {
@@ -581,7 +482,7 @@ export class GameComponent {
       this.dialogMessage = '';
       this.Today = Utils.getToday();
       this.Deck = new Deck();
-      this.Deck.Cards = this.shuffelArray(this.Deck.Cards);
+      this.Deck.Cards = this.randomService.shuffelArray(this.Deck.Cards);
       this.setTable();
       this.countSets();
       this.startTime();

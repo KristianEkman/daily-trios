@@ -27,25 +27,18 @@
         <span>Find the {{ SetCount }} sets</span>
         <span>{{ GameType == "random" ? "Id: " + GameId : Today }}</span>
       </div>
-      <div *ngIf="RenderGrid" class="grid" @list>
-        <app-card
-          *ngFor="let card of Tabel"
-          [CardInfo]="card"
-          (CardSelected)="cardSelected($event)"
-          (CardUnSelected)="cardUnSelected($event)"
-          [attr.id]="card.Id"
-        >
-        </app-card>
-      </div>
+      @if (RenderGrid) {
+      <app-cards-grid
+        id="cards-grid"
+        [Cards]="Tabel"
+        (Selected)="cardSelected($event)"
+        (UnSelected)="cardUnSelected($event)"
+      />
+      }
     </div>
     <div class="founds-container">
       <div class="found-count">Found {{ Found.length }}</div>
-      <div class="grid">
-        @for (cards of Found; track $index) { @for (card of cards; track
-        card.Id) {
-        <app-card [CardInfo]="card" [Found]="true" />
-        } }
-      </div>
+      <app-cards-grid [Cards]="Found.flat()" />
     </div>
   </div>
   <div class="usertime">

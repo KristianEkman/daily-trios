@@ -1,0 +1,11 @@
+<div class="grid" @list>
+  @for (card of Cards; track card.Id) {
+  <app-card
+    [CardInfo]="card"
+    (CardSelected)="cardSelected(card)"
+    (CardUnSelected)="cardUnSelected(card)"
+    [attr.id]="card.Id"
+  >
+  </app-card>
+  }
+</div>

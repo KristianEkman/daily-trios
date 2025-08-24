@@ -55,13 +55,6 @@
   justify-content: space-between;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, auto-fit, minmax(100));
-  gap: 3px;
-}
-
 .confetti {
   position: fixed;
   pointer-events: none;
