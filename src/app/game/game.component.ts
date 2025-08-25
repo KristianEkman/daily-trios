@@ -1,20 +1,14 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  inject,
-  ViewChild,
-} from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { Deck } from '../deck';
-import { CardComponent } from '../card/card.component';
 import { CommonModule } from '@angular/common';
 import { CardInfo } from '../card-info';
 import { DialogComponent } from '../dialog/dialog.component';
 import { Utils } from '../utils';
 import { RandomService } from '../randoms';
-import { Database, get, getDatabase, ref, set } from '@angular/fire/database';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardsGridComponent } from '../cards-grid/cards-grid.component';
+import { GameDataService } from '../services/game-data-service';
+import { ConfettiService } from '../services/confetti.service';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +18,6 @@ import { CardsGridComponent } from '../cards-grid/cards-grid.component';
   styleUrl: './game.component.scss',
 })
 export class GameComponent {
-  private database: Database = inject(Database);
   GameType: 'random' | 'daily' = 'daily';
   title = 'daily-set';
   Deck: Deck = new Deck();
@@ -48,10 +41,13 @@ export class GameComponent {
   GameId = '';
   RenderGrid = true;
 
+  private data = inject(GameDataService);
+
   constructor(
     private randomService: RandomService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private confetti: ConfettiService
   ) {
     this.setUserName();
     this.route.params.subscribe((r) => {
@@ -67,7 +63,7 @@ export class GameComponent {
   @ViewChild(CardsGridComponent) cardsGrid!: CardsGridComponent;
 
   showToplist() {
-    this.getTopList(this.Today).then((topList) => {
+    this.data.getTopList(this.Today).then((topList) => {
       this.Toplist = topList;
       this.ShowToplist = true;
     });
@@ -75,62 +71,6 @@ export class GameComponent {
 
   shuffleCardsTable() {
     this.cardsGrid.shuffleCardsTable();
-  }
-
-  storeResult(user: string, gameId: string, seconds: number) {
-    if (this.GameType === 'random') {
-      return;
-    }
-    const path = `${gameId}/${user}`;
-    const dbRef = ref(this.database, path);
-
-    get(dbRef)
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          console.log('Data already exists. Not saving.');
-          return;
-        }
-        set(dbRef, { time: seconds })
-          .then(() => {
-            console.log('Data saved successfully!');
-          })
-          .catch((error) => {
-            console.error('Error saving data:', error);
-          });
-      })
-      .catch((error) => {
-        console.error('Error checking existing data:', error);
-      });
-  }
-
-  async getTopList(
-    gameId: string,
-    limit: number = 10
-  ): Promise<{ user: string; time: number }[]> {
-    const db = getDatabase();
-    const pathRef = ref(db, gameId);
-
-    try {
-      const snapshot = await get(pathRef);
-      if (!snapshot.exists()) {
-        console.log('No results found for this gameId.');
-        return [];
-      }
-
-      const results: { user: string; time: number }[] = [];
-
-      snapshot.forEach((childSnapshot) => {
-        const user = childSnapshot.key!;
-        const time = childSnapshot.val().time;
-        results.push({ user, time });
-      });
-
-      // Sort by time ascending and return the top `limit` results
-      return results.sort((a, b) => a.time - b.time).slice(0, limit);
-    } catch (error) {
-      console.error('Error fetching top list:', error);
-      return [];
-    }
   }
 
   getCardPath(c: CardInfo) {
@@ -189,11 +129,11 @@ export class GameComponent {
           this.SelectedCards.forEach((c) => this.blink(c));
           if (this.Found.length === this.SetCount) {
             // all sets are found
-            this.storeResult(this.UserName, this.Today, this.TotalSeconds);
+            this.data.storeResult(this.UserName, this.Today, this.TotalSeconds);
             clearInterval(this.TimeHandle);
-            this.dialogMessage = 'Good! Your time:' + this.Time;
+            this.dialogMessage = 'Your time is ' + this.Time;
             this.showDialog = true;
-            this.fireConfetti(1200);
+            this.confetti.fire(1200);
           }
         } else {
           // the set already exists
@@ -214,95 +154,6 @@ export class GameComponent {
         }, 500);
       }
     }
-  }
-
-  private fireConfetti(durationMs = 3000) {
-    const canvas = document.getElementById(
-      'confetti-canvas'
-    ) as HTMLCanvasElement;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d')!;
-    let w = (canvas.width = window.innerWidth);
-    let h = (canvas.height = window.innerHeight);
-
-    const N = 180;
-    const originX = w / 2;
-    const originY = h * 0.9; // center lower screen
-    const g = 500; // gravity (px/s^2) downward
-    const speedMin = 200,
-      speedMax = 700; // initial launch speed (px/s)
-    const spreadDeg = 55; // angle spread around straight up
-    const rad = (deg: number) => (deg * Math.PI) / 180;
-
-    type Piece = {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      r: number;
-      rot: number;
-      vr: number;
-      hue: number;
-    };
-
-    // Build pieces with upward velocities at different angles
-    const pieces: Piece[] = Array.from({ length: N }).map((_, i) => {
-      const angle = -90 + (Math.random() * 2 - 1) * spreadDeg; // around straight up
-      const speed = speedMin + Math.random() * (speedMax - speedMin);
-      return {
-        x: originX,
-        y: originY,
-        vx: Math.cos(rad(angle)) * speed, // horizontal component
-        vy: Math.sin(rad(angle)) * speed, // vertical (negative = up)
-        r: 2 + Math.random() * 4,
-        rot: Math.random() * Math.PI,
-        vr: (-0.2 + Math.random() * 0.4) * 4, // faster spin
-        hue: Math.random() * 360,
-      };
-    });
-
-    const fired = performance.now();
-    let last = fired;
-    let opacity = 1;
-
-    const drawFrame = (t: number) => {
-      const dt = Math.min(32, t - last) / 1000; // seconds, clamp long frames
-      last = t;
-
-      // physics
-      for (const p of pieces) {
-        p.vy += g * dt; // gravity pulls down (+y)
-        p.x += p.vx * dt;
-        p.y += p.vy * dt;
-        p.rot += p.vr * dt;
-      }
-
-      // fade out over time
-      const elapsed = t - fired;
-      opacity = Math.max(0, 1 - elapsed / durationMs);
-
-      // draw
-      ctx.clearRect(0, 0, w, h);
-      for (const p of pieces) {
-        // optional: tiny air drag feel
-        // p.vx *= (1 - 0.05*dt); p.vy *= (1 - 0.02*dt);
-
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot);
-        ctx.fillStyle = `hsla(${p.hue}, 90%, 60%, ${opacity})`;
-        ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
-        ctx.restore();
-      }
-
-      if (elapsed < durationMs) {
-        requestAnimationFrame(drawFrame);
-      } else {
-        ctx.clearRect(0, 0, w, h);
-      }
-    };
-
-    requestAnimationFrame(drawFrame);
   }
 
   getId(cards: CardInfo[]) {
