@@ -102,4 +102,28 @@ export class Deck {
       items.splice(index, 1);
     }
   }
+
+  static isSet(card1: CardInfo, card2: CardInfo, card3: CardInfo) {
+    if (!this.allAreSameOrAllDiffer(card1.Color, card2.Color, card3.Color)) {
+      return false;
+    }
+
+    if (!this.allAreSameOrAllDiffer(card1.Count, card2.Count, card3.Count)) {
+      return false;
+    }
+
+    if (!this.allAreSameOrAllDiffer(card1.Shape, card2.Shape, card3.Shape)) {
+      return false;
+    }
+
+    if (!this.allAreSameOrAllDiffer(card1.Fill, card2.Fill, card3.Fill)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  static allAreSameOrAllDiffer(a: any, b: any, c: any): boolean {
+    return (a === b && b === c && a === c) || (a !== b && b !== c && a !== c);
+  }
 }

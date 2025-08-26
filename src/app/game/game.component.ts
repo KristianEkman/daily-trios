@@ -113,7 +113,7 @@ export class GameComponent {
     const cards = this.SelectedCards;
     cards.push(card);
     if (cards.length == 3) {
-      if (this.isSet(cards[0], cards[1], cards[2])) {
+      if (Deck.isSet(cards[0], cards[1], cards[2])) {
         // a set is found
         cards.forEach((c) => (c.Selected = false));
         const setId = this.getId(this.SelectedCards);
@@ -156,31 +156,7 @@ export class GameComponent {
     return sorted.map((c) => c.Id).join('_');
   }
 
-  isSet(card1: CardInfo, card2: CardInfo, card3: CardInfo) {
-    if (!this.allAreSameOrAllDiffer(card1.Color, card2.Color, card3.Color)) {
-      return false;
-    }
-
-    if (!this.allAreSameOrAllDiffer(card1.Count, card2.Count, card3.Count)) {
-      return false;
-    }
-
-    if (!this.allAreSameOrAllDiffer(card1.Shape, card2.Shape, card3.Shape)) {
-      return false;
-    }
-
-    if (!this.allAreSameOrAllDiffer(card1.Fill, card2.Fill, card3.Fill)) {
-      return false;
-    }
-
-    return true;
-  }
-
-  allAreSameOrAllDiffer(a: any, b: any, c: any): boolean {
-    return (a === b && b === c && a === c) || (a !== b && b !== c && a !== c);
-  }
-
-  setTable() {
+  dealCards() {
     this.addRandomcard();
 
     while (this.DealtCards.length < 11) {
@@ -224,7 +200,13 @@ export class GameComponent {
     for (let a = 0; a < this.DealtCards.length; a++) {
       for (let b = a + 1; b < this.DealtCards.length; b++) {
         for (let c = b + 1; c < this.DealtCards.length; c++) {
-          if (this.isSet(this.DealtCards[a], this.DealtCards[b], this.DealtCards[c])) {
+          if (
+            Deck.isSet(
+              this.DealtCards[a],
+              this.DealtCards[b],
+              this.DealtCards[c]
+            )
+          ) {
             const id = this.getId([
               this.DealtCards[a],
               this.DealtCards[b],
@@ -329,7 +311,7 @@ export class GameComponent {
       this.Today = Utils.getToday();
       this.Deck = new Deck();
       this.Deck.Cards = this.randomService.shuffelArray(this.Deck.Cards);
-      this.setTable();
+      this.dealCards();
       this.countSets();
       this.startTime();
       this.RenderGrid = true;
