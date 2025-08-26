@@ -1,0 +1,27 @@
+<app-game-buttons
+  (ShowTopList)="showToplist()"
+  (GiveHint)="giveHint()"
+  (ShuffleCardsTable)="shuffleCardsTable()"
+  (NavigateToRandom)="navigateToRandom()"
+  (NavigateToDaily)="navigateToDaily()"
+></app-game-buttons>
+<div class="card-container">
+  <div>
+    <div class="sub-header">
+      <span>Find all sets in the deck</span>
+      <span>{{ GameType == "random" ? "Id: " + GameId : Today }}</span>
+    </div>
+    @if (RenderGrid) {
+    <app-cards-grid
+      id="cards-grid"
+      [Cards]="DealtCards"
+      (Selected)="cardSelected($event)"
+      (UnSelected)="cardUnSelected($event)"
+    />
+    }
+  </div>
+  <div class="founds-container">
+    <p>Found sets: {{ FoundSets }}</p>
+    <p>Remaining cards: {{ Deck.Cards.length }}</p>
+  </div>
+</div>

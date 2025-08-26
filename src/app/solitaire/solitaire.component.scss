@@ -1,0 +1,22 @@
+.sub-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-container {
+  display: flex;
+  @media (orientation: landscape) {
+    flex-direction: row;
+  }
+  @media (orientation: portrait) {
+    flex-direction: column;
+  }
+}
+
+.founds-container {
+    margin-left: 10px;
+  @media (orientation: portrait) {
+    margin-top: 10px;
+    margin-left: 0;
+  }
+}

@@ -9,11 +9,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CardsGridComponent } from '../cards-grid/cards-grid.component';
 import { GameDataService } from '../services/game-data-service';
 import { ConfettiService } from '../services/confetti.service';
+import { GameButtonsComponent } from '../game-buttons/game-buttons.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, DialogComponent, CardsGridComponent],
+  imports: [
+    CommonModule,
+    DialogComponent,
+    CardsGridComponent,
+    GameButtonsComponent,
+  ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })
@@ -82,19 +88,10 @@ export class GameComponent {
       totalSeconds += this.HintCount * 60;
 
       this.TotalSeconds = totalSeconds;
-      let formatted = this.formatTime(totalSeconds);
+      let formatted = Utils.formatTime(totalSeconds);
 
       this.Time = formatted;
     }, 1000);
-  }
-
-  public formatTime(totalSeconds: number) {
-    let minutes = Math.floor(totalSeconds / 60);
-    let seconds = totalSeconds % 60;
-    let formatted = `${String(minutes).padStart(2, '0')}:${String(
-      seconds
-    ).padStart(2, '0')}`;
-    return formatted;
   }
 
   cardUnSelected(card: CardInfo) {
@@ -103,10 +100,10 @@ export class GameComponent {
       this.SelectedCards.splice(index, 1);
     }
   }
-
+  
   private shake(cards: CardInfo[]) {
-    cards.forEach((c) => ((c as any).Shake = true));
-    setTimeout(() => cards.forEach((c) => ((c as any).Shake = false)), 450);
+    cards.forEach((c) => (c.Shake = true));
+    setTimeout(() => cards.forEach((c) => (c.Shake = false)), 450);
   }
 
   cardSelected(card: CardInfo) {
@@ -276,7 +273,11 @@ export class GameComponent {
   }
 
   navigateToDaily() {
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('game/');
+  }
+
+  formatTime(secs: number) {
+    return Utils.formatTime(secs);
   }
 
   startRandom(id: string) {

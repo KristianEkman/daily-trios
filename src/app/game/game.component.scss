@@ -1,6 +1,4 @@
-.app-container {
-  padding: 1em;
-}
+
 
 .card-container {
   display: flex;
@@ -20,13 +18,6 @@
   }
 }
 
-.buttons {
-  display: inline-flex;
-  gap: 1vw;
-  padding-bottom: 2vh;
-  overflow: scroll;
-  max-width: 100%;
-}
 
 .founds-container {
   @media (orientation: portrait) {

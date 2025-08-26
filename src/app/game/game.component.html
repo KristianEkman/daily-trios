@@ -1,50 +1,33 @@
-<div class="app-container">
-  <div class="buttons">
-    <button class="poker-btn" (click)="navigateToDaily()">
-      Daily
-      <img class="icon" src="icons/new-daily.svg" alt="" />
-    </button>
-    <button class="poker-btn" (click)="navigateToRandom()">
-      Random
-      <img class="icon" src="icons/random.svg" alt="" />
-    </button>
-    <button class="poker-btn" (click)="shuffleCardsTable()">
-      Shuffle
-      <img class="icon" src="icons/shuffle.svg" alt="" height="20px" />
-    </button>
-    <button class="poker-btn" (click)="giveHint()">
-      Hint
-      <img class="icon" src="icons/hint.svg" alt="" height="20px" />
-    </button>
-    <button class="poker-btn" (click)="showToplist()">
-      Toplist
-      <img class="icon" src="icons/toplist.svg" alt="" />
-    </button>
-  </div>
-  <div class="card-container">
-    <div class="tabel">
-      <div class="sub-header">
-        <span>Find the {{ SetCount }} sets</span>
-        <span>{{ GameType == "random" ? "Id: " + GameId : Today }}</span>
-      </div>
-      @if (RenderGrid) {
-      <app-cards-grid
-        id="cards-grid"
-        [Cards]="DealtCards"
-        (Selected)="cardSelected($event)"
-        (UnSelected)="cardUnSelected($event)"
-      />
-      }
+<app-game-buttons
+  (ShowTopList)="showToplist()"
+  (GiveHint)="giveHint()"
+  (ShuffleCardsTable)="shuffleCardsTable()"
+  (NavigateToRandom)="navigateToRandom()"
+  (NavigateToDaily)="navigateToDaily()"
+></app-game-buttons>
+<div class="card-container">
+  <div>
+    <div class="sub-header">
+      <span>Find the {{ SetCount }} sets</span>
+      <span>{{ GameType == "random" ? "Id: " + GameId : Today }}</span>
     </div>
-    <div class="founds-container">
-      <div class="found-count">Found {{ Found.length }}</div>
-      <app-cards-grid [Cards]="Found.flat()" />
-    </div>
+    @if (RenderGrid) {
+    <app-cards-grid
+      id="cards-grid"
+      [Cards]="DealtCards"
+      (Selected)="cardSelected($event)"
+      (UnSelected)="cardUnSelected($event)"
+    />
+    }
   </div>
-  <div class="usertime">
-    <a href="#" (click)="changeUserName()" class="user">{{ UserName }}</a>
-    <div class="time">{{ Time }}</div>
+  <div class="founds-container">
+    <div class="found-count">Found {{ Found.length }}</div>
+    <app-cards-grid [Cards]="Found.flat()" />
   </div>
+</div>
+<div class="usertime">
+  <a href="#" (click)="changeUserName()" class="user">{{ UserName }}</a>
+  <div class="time">{{ Time }}</div>
 </div>
 
 <app-dialog
