@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { GameButtonsComponent } from '../game-buttons/game-buttons.component';
 import { CardsGridComponent } from '../cards-grid/cards-grid.component';
 import { CardInfo } from '../card-info';
@@ -6,11 +6,12 @@ import { Utils } from '../utils';
 import { Deck } from '../deck';
 import { ActivatedRoute } from '@angular/router';
 import { RandomService } from '../randoms';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-solitaire',
   standalone: true,
-  imports: [GameButtonsComponent, CardsGridComponent],
+  imports: [GameButtonsComponent, CardsGridComponent, DialogComponent],
   templateUrl: './solitaire.component.html',
   styleUrl: './solitaire.component.scss',
 })
@@ -30,6 +31,10 @@ export class SolitaireComponent {
   TotalSeconds = 0;
   Started = new Date().getTime();
   TimeHandle: any = null;
+  showDialog = false;
+  dialogMessage = '';
+
+  @ViewChild(CardsGridComponent) cardsGrid!: CardsGridComponent;
 
   constructor() {
     this.route.params.subscribe((r) => {
@@ -52,18 +57,8 @@ export class SolitaireComponent {
     if (cards.length == 3) {
       if (Deck.isSet(cards[0], cards[1], cards[2])) {
         this.FoundSets++;
-
-        const indexes = this.DealtCards.map((c, i) =>
-          c.Selected ? i : -1
-        ).filter((i) => i !== -1);
-
-        for (const index of indexes) {
-          const next = this.Deck.Cards.pop();
-          if (!next) continue;
-          setTimeout(() => {
-            this.DealtCards.splice(index, 1, next);
-          }, 30 * index);
-        }
+        this.dealNewCards();
+        this.checkForWin();
       } else {
         this.shake(cards);
       }
@@ -71,6 +66,33 @@ export class SolitaireComponent {
         cards.forEach((c) => (c.Selected = false));
         this.SelectedCards = [];
       }, 500);
+    }
+  }
+
+  checkForWin() {
+    if (this.Deck.Cards.length === 0) {
+      if (!this.giveHint()) {
+        clearInterval(this.TimeHandle);
+        this.TimeHandle = null;
+        this.dialogMessage = `You found all sets! Time: ${this.Time}`;
+        this.showDialog = true;
+      }
+    }
+  }
+
+  private dealNewCards() {
+    const indexes = this.DealtCards.map((c, i) => (c.Selected ? i : -1)).filter(
+      (i) => i !== -1
+    );
+    for (const index of indexes) {
+      const next = this.Deck.Cards.pop();
+      setTimeout(() => {
+        if (next) {
+          this.DealtCards.splice(index, 1, next);
+        } else {
+          this.DealtCards.splice(index, 1);
+        }
+      }, 30 * index);
     }
   }
 
@@ -94,8 +116,8 @@ export class SolitaireComponent {
     throw new Error('Method not implemented.');
   }
 
-  shuffleCardsTable() {
-    throw new Error('Method not implemented.');
+  shuffleDealtCards() {
+    this.DealtCards = this.cardsGrid.shuffleDealtCards();
   }
 
   giveHint() {
@@ -111,11 +133,12 @@ export class SolitaireComponent {
           ) {
             this.blink(this.DealtCards[a]);
             this.blink(this.DealtCards[b]);
-            return;
+            return true;
           }
         }
       }
     }
+    return false;
   }
 
   blink(card: CardInfo) {

@@ -1,7 +1,7 @@
 <app-game-buttons
   (ShowTopList)="showToplist()"
   (GiveHint)="giveHint()"
-  (ShuffleCardsTable)="shuffleCardsTable()"
+  (ShuffleCardsTable)="shuffleDealtCards()"
   (NavigateToRandom)="navigateToRandom()"
   (NavigateToDaily)="navigateToDaily()"
 ></app-game-buttons>
@@ -25,3 +25,13 @@
     <p>Remaining cards: {{ Deck.Cards.length }}</p>
   </div>
 </div>
+
+<div class="usertime">
+  <div class="time">{{ Time }}</div>
+</div>
+
+<app-dialog
+  [Visible]="showDialog"
+  [Message]="dialogMessage"
+  (click)="showDialog = false"
+></app-dialog>

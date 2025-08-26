@@ -74,8 +74,8 @@ export class GameComponent {
     });
   }
 
-  shuffleCardsTable() {
-    this.cardsGrid.shuffleCardsTable();
+  shuffleDealtCards() {
+    this.DealtCards = this.cardsGrid.shuffleDealtCards();
   }
 
   startTime() {
@@ -100,7 +100,7 @@ export class GameComponent {
       this.SelectedCards.splice(index, 1);
     }
   }
-  
+
   private shake(cards: CardInfo[]) {
     cards.forEach((c) => (c.Shake = true));
     setTimeout(() => cards.forEach((c) => (c.Shake = false)), 450);

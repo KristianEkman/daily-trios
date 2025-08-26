@@ -84,11 +84,11 @@ export class CardsGridComponent {
     this.Selected.emit(card);
   }
 
-  public shuffleCardsTable() {
+  public shuffleDealtCards() : CardInfo[] {
     const grid = this.elementRef.nativeElement.querySelector(
       '.grid'
     ) as HTMLElement;
-    if (!grid) return;
+    if (!grid) return this.Cards;
     // 1) FIRST: measure current positions
     const cards = Array.from(
       grid.querySelectorAll('app-card')
@@ -132,5 +132,7 @@ export class CardsGridComponent {
         });
       });
     });
+
+    return this.Cards;
   }
 }
