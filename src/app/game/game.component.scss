@@ -21,19 +21,22 @@
 }
 
 .buttons {
-  display: flex;
+  display: inline-flex;
   gap: 1vw;
   padding-bottom: 2vh;
+  overflow: scroll;
+  max-width: 100%;
 }
 
 .founds-container {
   @media (orientation: portrait) {
     margin-top: 10px;
+    margin-left: 0;
   }
 
   .found-count {
     display: block;
-    text-align: center;
+    text-align: left;
   }
   app-card {
     margin-right: 5px;
