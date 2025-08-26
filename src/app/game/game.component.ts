@@ -22,7 +22,7 @@ export class GameComponent {
   title = 'daily-set';
   Deck: Deck = new Deck();
   SelectedCards: CardInfo[] = [];
-  Tabel: CardInfo[] = [];
+  DealtCards: CardInfo[] = [];
   Found: CardInfo[][] = [];
   FoundIds: string[] = [];
   ExistingIds: string[] = [];
@@ -42,13 +42,12 @@ export class GameComponent {
   RenderGrid = true;
 
   private data = inject(GameDataService);
+  private randomService = inject(RandomService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private confetti = inject(ConfettiService);
 
-  constructor(
-    private randomService: RandomService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private confetti: ConfettiService
-  ) {
+  constructor() {
     this.setUserName();
     this.route.params.subscribe((r) => {
       const id = r['id'];
@@ -71,10 +70,6 @@ export class GameComponent {
 
   shuffleCardsTable() {
     this.cardsGrid.shuffleCardsTable();
-  }
-
-  getCardPath(c: CardInfo) {
-    return `set_picts/${c.Shape}_${c.Fill}_${c.Color}.png`;
   }
 
   startTime() {
@@ -188,27 +183,27 @@ export class GameComponent {
   setTable() {
     this.addRandomcard();
 
-    while (this.Tabel.length < 11) {
+    while (this.DealtCards.length < 11) {
       this.addRandomcard();
-      if (this.Tabel.length === 11) {
+      if (this.DealtCards.length === 11) {
         break;
       }
-      var length = this.Tabel.length;
-      const card1 = this.Tabel[length - 1];
-      const card2 = this.Tabel[length - 2];
+      var length = this.DealtCards.length;
+      const card1 = this.DealtCards[length - 1];
+      const card2 = this.DealtCards[length - 2];
       this.createSetOrAddRandom(card1, card2);
     }
 
-    const card1 = this.Tabel[10];
-    const card2 = this.Tabel[0];
+    const card1 = this.DealtCards[10];
+    const card2 = this.DealtCards[0];
     this.createSetOrAddRandom(card1, card2);
-    this.Tabel = this.randomService.shuffelArray(this.Tabel);
+    this.DealtCards = this.randomService.shuffelArray(this.DealtCards);
   }
 
   createSetOrAddRandom(card1: CardInfo, card2: CardInfo) {
     const setCard = this.Deck.findMissingSetCard(card1, card2);
-    if (setCard && !this.Tabel.find((c) => c.Id == setCard.Id)) {
-      this.Tabel.push(setCard!);
+    if (setCard && !this.DealtCards.find((c) => c.Id == setCard.Id)) {
+      this.DealtCards.push(setCard!);
     } else {
       this.addRandomcard();
     }
@@ -217,23 +212,23 @@ export class GameComponent {
   addRandomcard() {
     const i = this.randomService.getRandomInt(0, 80);
     const card = this.Deck.Cards[i];
-    if (this.Tabel.find((x) => x.Id === card.Id)) {
+    if (this.DealtCards.find((x) => x.Id === card.Id)) {
       this.addRandomcard();
     } else {
-      this.Tabel.push(card);
+      this.DealtCards.push(card);
     }
   }
 
   countSets() {
     const sets: string[] = [];
-    for (let a = 0; a < this.Tabel.length; a++) {
-      for (let b = a + 1; b < this.Tabel.length; b++) {
-        for (let c = b + 1; c < this.Tabel.length; c++) {
-          if (this.isSet(this.Tabel[a], this.Tabel[b], this.Tabel[c])) {
+    for (let a = 0; a < this.DealtCards.length; a++) {
+      for (let b = a + 1; b < this.DealtCards.length; b++) {
+        for (let c = b + 1; c < this.DealtCards.length; c++) {
+          if (this.isSet(this.DealtCards[a], this.DealtCards[b], this.DealtCards[c])) {
             const id = this.getId([
-              this.Tabel[a],
-              this.Tabel[b],
-              this.Tabel[c],
+              this.DealtCards[a],
+              this.DealtCards[b],
+              this.DealtCards[c],
             ]);
             if (sets.indexOf(id) < 0) {
               sets.push(id);
@@ -252,7 +247,7 @@ export class GameComponent {
       if (this.FoundIds.indexOf(setId) == -1) {
         const cardIds = setId.split('_');
         const hintId = this.HintCount % 2 == 0 ? cardIds[0] : cardIds[1];
-        const hintCard = this.Tabel.find((c) => c.Id == parseInt(hintId));
+        const hintCard = this.DealtCards.find((c) => c.Id == parseInt(hintId));
         if (hintCard) {
           this.blink(hintCard);
         }
@@ -319,7 +314,7 @@ export class GameComponent {
     this.RenderGrid = false;
     setTimeout(() => {
       this.SelectedCards = [];
-      this.Tabel = [];
+      this.DealtCards = [];
       this.Found = [];
       this.FoundIds = [];
       this.ExistingIds = [];

@@ -30,7 +30,7 @@
       @if (RenderGrid) {
       <app-cards-grid
         id="cards-grid"
-        [Cards]="Tabel"
+        [Cards]="DealtCards"
         (Selected)="cardSelected($event)"
         (UnSelected)="cardUnSelected($event)"
       />
