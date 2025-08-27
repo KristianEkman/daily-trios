@@ -58,13 +58,13 @@ export class SolitaireComponent {
       if (Deck.isSet(cards[0], cards[1], cards[2])) {
         this.FoundSets++;
         this.dealNewCards();
-        this.checkForWin();
       } else {
         this.shake(cards);
       }
       setTimeout(() => {
         cards.forEach((c) => (c.Selected = false));
         this.SelectedCards = [];
+        this.checkForWin();
       }, 500);
     }
   }
@@ -74,26 +74,30 @@ export class SolitaireComponent {
       if (!this.giveHint()) {
         clearInterval(this.TimeHandle);
         this.TimeHandle = null;
-        this.dialogMessage = `You found all sets! Time: ${this.Time}`;
+        this.dialogMessage = `You finished in ${this.Time}`;
         this.showDialog = true;
       }
     }
   }
 
   private dealNewCards() {
-    const indexes = this.DealtCards.map((c, i) => (c.Selected ? i : -1)).filter(
-      (i) => i !== -1
-    );
-    for (const index of indexes) {
+    const ids = this.DealtCards.filter((c) => c.Selected).map((c) => c.Id);
+    const addCards = this.DealtCards.length <= 12;
+
+    ids.forEach((id, i) => {
       const next = this.Deck.Cards.pop();
-      setTimeout(() => {
-        if (next) {
-          this.DealtCards.splice(index, 1, next);
-        } else {
-          this.DealtCards.splice(index, 1);
-        }
-      }, 30 * index);
-    }
+      if (next && addCards) {
+        setTimeout(() => {
+          const removeIndex = this.DealtCards.findIndex((c) => c.Id === id);
+          if (removeIndex === -1) return;
+          this.DealtCards.splice(removeIndex, 1, next);
+        }, 30 * i);
+      } else {
+        const removeIndex = this.DealtCards.findIndex((c) => c.Id === id);
+        if (removeIndex === -1) return;
+        this.DealtCards.splice(removeIndex, 1);
+      }
+    });
   }
 
   private shake(cards: CardInfo[]) {

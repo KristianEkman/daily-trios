@@ -8,12 +8,12 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './game-buttons.component.scss',
 })
 export class GameButtonsComponent {
-
   @Output() ShowTopList = new EventEmitter<void>();
   @Output() GiveHint = new EventEmitter<void>();
   @Output() ShuffleCardsTable = new EventEmitter<void>();
   @Output() NavigateToRandom = new EventEmitter<void>();
   @Output() NavigateToDaily = new EventEmitter<void>();
+  @Output() AddCards = new EventEmitter<void>();
 
   showToplist() {
     this.ShowTopList.emit();
@@ -29,5 +29,8 @@ export class GameButtonsComponent {
   }
   navigateToDaily() {
     this.NavigateToDaily.emit();
+  }
+  addCards() {
+    this.AddCards.emit();
   }
 }
