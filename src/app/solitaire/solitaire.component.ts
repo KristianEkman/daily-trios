@@ -7,11 +7,17 @@ import { Deck } from '../deck';
 import { ActivatedRoute } from '@angular/router';
 import { RandomService } from '../randoms';
 import { DialogComponent } from '../dialog/dialog.component';
+import { TopListComponent } from '../top-list/top-list.component';
 
 @Component({
   selector: 'app-solitaire',
   standalone: true,
-  imports: [GameButtonsComponent, CardsGridComponent, DialogComponent],
+  imports: [
+    GameButtonsComponent,
+    CardsGridComponent,
+    DialogComponent,
+    TopListComponent,
+  ],
   templateUrl: './solitaire.component.html',
   styleUrl: './solitaire.component.scss',
 })
@@ -33,6 +39,7 @@ export class SolitaireComponent {
   TimeHandle: any = null;
   showDialog = false;
   dialogMessage = '';
+  ShowToplist = false;
 
   @ViewChild(CardsGridComponent) cardsGrid!: CardsGridComponent;
 
@@ -153,7 +160,7 @@ export class SolitaireComponent {
   }
 
   showToplist() {
-    throw new Error('Method not implemented.');
+    this.ShowToplist = true;
   }
 
   startDaily() {
@@ -172,8 +179,8 @@ export class SolitaireComponent {
       // this.HintCount = 0;
       this.Started = new Date().getTime();
 
-      // this.showDialog = false;
-      // this.dialogMessage = '';
+      this.showDialog = false;
+      this.dialogMessage = '';
       this.Today = Utils.getToday();
       this.Deck = new Deck();
       this.Deck.Cards = this.randomService.shuffelArray(this.Deck.Cards);

@@ -10,6 +10,7 @@ import { CardsGridComponent } from '../cards-grid/cards-grid.component';
 import { GameDataService } from '../services/game-data-service';
 import { ConfettiService } from '../services/confetti.service';
 import { GameButtonsComponent } from '../game-buttons/game-buttons.component';
+import { TopListComponent } from "../top-list/top-list.component";
 
 @Component({
   selector: 'app-root',
@@ -19,7 +20,8 @@ import { GameButtonsComponent } from '../game-buttons/game-buttons.component';
     DialogComponent,
     CardsGridComponent,
     GameButtonsComponent,
-  ],
+    TopListComponent
+],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })

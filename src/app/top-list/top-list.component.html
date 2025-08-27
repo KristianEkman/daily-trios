@@ -1,0 +1,17 @@
+<app-dialog
+  [Visible]="true"
+  [Message]="''"
+  (click)="close()"
+>
+  <table>
+    @if(Toplist.length == 0){
+    <td>No results today yet.</td>
+    } @for (item of Toplist; track $index) {
+    <tr>
+      <td>{{ $index + 1 }}.</td>
+      <td class="name">{{ item.user }}</td>
+      <td>{{ formatTime(item.time) }}</td>
+    </tr>
+    }
+  </table>
+</app-dialog>

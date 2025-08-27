@@ -36,3 +36,7 @@
   [Message]="dialogMessage"
   (click)="showDialog = false"
 ></app-dialog>
+
+@if(ShowToplist){
+  <app-top-list [Date]="Today" (onClose)="ShowToplist = false" />
+}
