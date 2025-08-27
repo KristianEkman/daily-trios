@@ -4,7 +4,7 @@ import { CardsGridComponent } from '../cards-grid/cards-grid.component';
 import { CardInfo } from '../card-info';
 import { Utils } from '../utils';
 import { Deck } from '../deck';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RandomService } from '../randoms';
 import { DialogComponent } from '../dialog/dialog.component';
 import { TopListComponent } from '../top-list/top-list.component';
@@ -24,6 +24,7 @@ import { TopListComponent } from '../top-list/top-list.component';
 export class SolitaireComponent {
   private route = inject(ActivatedRoute);
   private randomService = inject(RandomService);
+  private router = inject(Router);
 
   GameType: 'random' | 'daily' = 'daily';
   GameId = '';
@@ -54,8 +55,11 @@ export class SolitaireComponent {
     });
   }
 
-  startRandom(id: any) {
-    throw new Error('Method not implemented.');
+  startRandom(id: string) {
+    this.GameType = 'random';
+    this.GameId = id;
+    this.randomService.setSeed(id);
+    this.startGame();
   }
 
   cardSelected(card: CardInfo) {
@@ -120,11 +124,12 @@ export class SolitaireComponent {
   }
 
   navigateToDaily() {
-    throw new Error('Method not implemented.');
+    this.router.navigateByUrl('solitaire/');
   }
 
   navigateToRandom() {
-    throw new Error('Method not implemented.');
+    const seed = Math.floor(Math.random() * 1000).toString();
+    this.router.navigateByUrl(`solitaire/${seed}`);
   }
 
   shuffleDealtCards() {

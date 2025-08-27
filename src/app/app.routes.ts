@@ -13,11 +13,19 @@ export const routes: Routes = [
     component: SolitaireComponent,
   },
   {
+    path: 'solitaire/:id',
+    component: SolitaireComponent,
+  },
+  {
+    path: 'game',
+    component: GameComponent,
+  },
+  {
     path: 'game/:id',
     component: GameComponent,
   },
   {
     path: '**',
-    component: GameComponent,
+    component: StartPageComponent,
   },
 ];
