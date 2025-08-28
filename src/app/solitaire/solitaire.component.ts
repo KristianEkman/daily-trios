@@ -82,7 +82,7 @@ export class SolitaireComponent {
 
   checkForWin() {
     if (this.Deck.Cards.length === 0) {
-      if (!this.giveHint()) {
+      if (!this.hasSet(false)) {
         clearInterval(this.TimeHandle);
         this.TimeHandle = null;
         this.dialogMessage = `You finished in ${this.Time}`;
@@ -136,7 +136,7 @@ export class SolitaireComponent {
     this.DealtCards = this.cardsGrid.shuffleDealtCards();
   }
 
-  giveHint() {
+  hasSet(giveHint: boolean) {
     for (let a = 0; a < this.DealtCards.length; a++) {
       for (let b = a + 1; b < this.DealtCards.length; b++) {
         for (let c = b + 1; c < this.DealtCards.length; c++) {
@@ -147,8 +147,10 @@ export class SolitaireComponent {
               this.DealtCards[c]
             )
           ) {
-            this.blink(this.DealtCards[a]);
-            this.blink(this.DealtCards[b]);
+            if (giveHint) {
+              this.blink(this.DealtCards[a]);
+              this.blink(this.DealtCards[b]);
+            }
             return true;
           }
         }
