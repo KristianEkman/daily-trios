@@ -14,6 +14,7 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+import { Filling, Shape } from '../types';
 
 @Component({
   selector: 'app-card',
@@ -53,6 +54,8 @@ export class CardComponent {
   CardUnSelected = new EventEmitter<CardInfo>();
   @Input()
   Found = false;
+  Filling = Filling;
+  Shape = Shape;
 
   // expose animation states via host bindings
   @HostBinding('@dealIn') dealIn = true;
@@ -61,10 +64,7 @@ export class CardComponent {
     return this.CardInfo?.Shake ? 'on' : 'off';
   }
 
-  ImagePath(): string {
-    var c = this.CardInfo;
-    return `set_picts/${c.Shape}_${c.Fill}_${c.Color}.png`;
-  }
+  Id = Math.random().toString(36).substring(2, 15);
 
   clicked() {
     if (this.Found) return;
@@ -73,6 +73,17 @@ export class CardComponent {
       this.CardSelected.emit(this.CardInfo);
     } else {
       this.CardUnSelected.emit(this.CardInfo);
+    }
+  }
+
+  getFilling(): string {
+    switch (this.CardInfo.Fill) {
+      case Filling.Striped:
+        return `url(#${this.Id})`;
+      case Filling.Solid:
+        return this.CardInfo.Color;
+      default:
+        return 'none';
     }
   }
 }

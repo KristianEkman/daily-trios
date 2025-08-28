@@ -31,18 +31,19 @@
 
 .card-images {
   display: flex;
-  gap: 14px;
+  gap: 0;
   justify-content: center;
   align-items: center;
-  padding: 14px;
+  padding: 8px;
 }
 
-.card-images img {
+.card-images svg {
+  
   @media (orientation: landscape) {
-    width: calc(50vw / 20);
+    width: calc(50vw / 10);
   }
   @media (orientation: portrait) {
-    width: calc(100vw / 25);
+    width: calc(100vw / 13);
   }
   height: auto;
   transform-origin: center center;
