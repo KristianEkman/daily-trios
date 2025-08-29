@@ -2,8 +2,6 @@
   (ShowTopList)="showToplist()"
   (GiveHint)="giveHint()"
   (ShuffleCardsTable)="shuffleDealtCards()"
-  (NavigateToRandom)="navigateToRandom()"
-  (NavigateToDaily)="navigateToDaily()"
 ></app-game-buttons>
 <div class="card-container">
   <div>
@@ -15,6 +13,7 @@
     <app-cards-grid
       id="cards-grid"
       [Cards]="DealtCards"
+      [UniqueIds]="true"
       (Selected)="cardSelected($event)"
       (UnSelected)="cardUnSelected($event)"
     />

@@ -66,6 +66,7 @@ import { RandomService } from '../randoms';
 export class CardsGridComponent {
   @Input()
   Cards: CardInfo[] = [];
+  @Input() UniqueIds: boolean = false;
 
   @Output() UnSelected = new EventEmitter<CardInfo>();
   @Output() Selected = new EventEmitter<CardInfo>();
@@ -84,7 +85,7 @@ export class CardsGridComponent {
     this.Selected.emit(card);
   }
 
-  public shuffleDealtCards() : CardInfo[] {
+  public shuffleDealtCards(): CardInfo[] {
     const grid = this.elementRef.nativeElement.querySelector(
       '.grid'
     ) as HTMLElement;

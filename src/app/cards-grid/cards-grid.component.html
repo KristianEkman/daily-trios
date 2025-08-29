@@ -1,5 +1,5 @@
 <div class="grid" @list>
-  @for (card of Cards; track card.Id) {
+  @if(UniqueIds){ @for (card of Cards; track card.Id) {
   <app-card
     [CardInfo]="card"
     (CardSelected)="cardSelected(card)"
@@ -7,5 +7,7 @@
     [attr.id]="card.Id"
   >
   </app-card>
-  }
+  } } @else { @for (card of Cards; track $index) {
+  <app-card [CardInfo]="card"> </app-card>
+  } }
 </div>

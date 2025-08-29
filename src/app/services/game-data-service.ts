@@ -8,7 +8,11 @@ export class GameDataService {
   private db = inject(Database);
 
   /** Save a user's result for a given gameId if it doesn't already exist */
-  async storeResult(user: string, gameId: string, seconds: number): Promise<void> {
+  async storeResult(
+    user: string,
+    gameId: string,
+    seconds: number
+  ): Promise<void> {
     const path = `${gameId}/${user}`;
     const dbRef = ref(this.db, path);
 
@@ -22,13 +26,17 @@ export class GameDataService {
 
   /** Fetch toplist for a gameId, sorted by time (ascending) and limited */
   async getTopList(gameId: string, limit = 10): Promise<ToplistEntry[]> {
+    if (gameId === "") {
+      throw new Error('getTopList called with empty gameId');
+    }
     const pathRef = ref(this.db, gameId);
     const snapshot = await get(pathRef);
+    
 
     if (!snapshot.exists()) return [];
 
     const results: ToplistEntry[] = [];
-    snapshot.forEach(child => {
+    snapshot.forEach((child) => {
       const user = child.key!;
       const time = child.val().time;
       results.push({ user, time });

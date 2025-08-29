@@ -1,6 +1,55 @@
-<h1>The Cards Match Game!</h1>
-<div class="buttons">
-  <button class="poker-btn" [routerLink]="['/game']">Puzzle</button>
-  <button class="poker-btn" [routerLink]="['/solitaire']">Solitaire</button>
-  <button class="poker-btn" [routerLink]="['/oneonone']">One on One</button>
-</div>
+<h1 class="start-title">The Cards Match Game</h1>
+
+<section class="mode-grid">
+  <!-- PUZZLE -->
+  <article class="mode-card">
+    <header class="mode-head">
+      <span class="chip chip-blue" aria-hidden="true">🧩</span>
+      <div>
+        <h2>Puzzle</h2>
+        <p>Find sets — daily or endless random.</p>
+      </div>
+    </header>
+    <div class="mode-actions">
+      <button class="poker-btn" [routerLink]="['/game']">Daily Puzzle</button>
+      <button class="poker-btn" (click)="navigateToRandomPuzzle()">
+        Random Puzzle
+      </button>
+    </div>
+  </article>
+
+  <!-- SOLITAIRE -->
+  <article class="mode-card">
+    <header class="mode-head">
+      <span class="chip chip-amber" aria-hidden="true">🃏</span>
+      <div>
+        <h2>Solitaire</h2>
+        <p>Solo mode — new board every day or shuffle forever.</p>
+      </div>
+    </header>
+    <div class="mode-actions">
+      <button class="poker-btn" [routerLink]="['/solitaire']">
+        Daily Solitaire
+      </button>
+      <button class="poker-btn" (click)="navigateToRandomSolitaire()">
+        Random Solitaire
+      </button>
+    </div>
+  </article>
+
+  <!-- ONE ON ONE (wide hero) -->
+  <article class="mode-card mode-wide">
+    <header class="mode-head">
+      <span class="chip chip-red" aria-hidden="true">⚔️</span>
+      <div>
+        <h2>One on One</h2>
+        <p>Head-to-head — fastest set finder wins.</p>
+      </div>
+    </header>
+    <div class="mode-actions single">
+      <button class="poker-btn" [routerLink]="['/oneonone']">
+        Start One on One
+      </button>
+    </div>
+  </article>
+</section>

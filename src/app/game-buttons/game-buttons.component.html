@@ -1,34 +1,30 @@
-<div class="buttons">
-  @if(NavigateToDaily.observed){
-  <button class="poker-btn" (click)="navigateToDaily()">
-    Daily
-    <img class="icon" src="icons/new-daily.svg" alt="" />
+<div class="outer-buttons">
+  <div class="buttons">
+    @if(AddCards.observed){
+    <button class="poker-btn" (click)="addCards()">
+      Add
+      <img class="icon" src="icons/addcard.svg" alt="" height="20px" />
+    </button>
+    } @if(ShuffleCardsTable.observed){
+    <button class="poker-btn" (click)="shuffleCardsTable()">
+      Shuffle
+      <img class="icon" src="icons/shuffle.svg" alt="" height="20px" />
+    </button>
+    } @if(GiveHint.observed){
+    <button class="poker-btn" (click)="giveHint()">
+      Hint
+      <img class="icon" src="icons/hint.svg" alt="" height="20px" />
+    </button>
+    } @if(ShowTopList.observed){
+    <button class="poker-btn" (click)="showToplist()">
+      Toplist
+      <img class="icon" src="icons/toplist.svg" alt="" />
+    </button>
+    }
+  </div>
+
+  <button class="poker-btn" routerLink="">
+    Home
+    <span class="icon">🏠</span>
   </button>
-  } @if(NavigateToRandom.observed){
-  <button class="poker-btn" (click)="navigateToRandom()">
-    Random
-    <img class="icon" src="icons/random.svg" alt="" />
-  </button>
-  }@if(AddCards.observed){
-  <button class="poker-btn" (click)="addCards()">
-    Add
-    <img class="icon" src="icons/shuffle.svg" alt="" height="20px" />
-  </button>
-  }
-   @if(ShuffleCardsTable.observed){
-  <button class="poker-btn" (click)="shuffleCardsTable()">
-    Shuffle
-    <img class="icon" src="icons/shuffle.svg" alt="" height="20px" />
-  </button>
-  } @if(GiveHint.observed){
-  <button class="poker-btn" (click)="giveHint()">
-    Hint
-    <img class="icon" src="icons/hint.svg" alt="" height="20px" />
-  </button>
-  } @if(ShowTopList.observed){
-  <button class="poker-btn" (click)="showToplist()">
-    Toplist
-    <img class="icon" src="icons/toplist.svg" alt="" />
-  </button>
-  }
 </div>

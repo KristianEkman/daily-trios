@@ -1,15 +1,95 @@
-.buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  button {
-    margin: 8px 0;
-    // make same width
-    width: 120px;
+.start-title {
+  text-align: center;
+  margin: 0.6rem 0 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.mode-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px 24px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.mode-card {
+  /* glassy panel that fits your felt theme */
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  padding: 14px 14px 16px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 }
 
-// center title
-h1 {
-  text-align: center;
+.mode-wide {
+  grid-column: span 2;
+}
+@media (max-width: 720px) {
+  .mode-wide { grid-column: auto; }
+}
+
+.mode-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+
+  h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: #fff;
+  }
+  p {
+    margin: 4px 0 0;
+    color: #cfcfcf;
+    opacity: 0.85;
+    font-size: 0.95rem;
+  }
+}
+
+/* poker chip badge */
+.chip {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 22px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4), inset 0 2px 6px rgba(255,255,255,0.2);
+  border: 2px solid rgba(255,255,255,0.25);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), rgba(255,255,255,0) 60%),
+    rgba(0,0,0,0.35);
+}
+.chip-blue  { background-color: rgba(56, 189, 248, 0.35); }
+.chip-amber { background-color: rgba(245, 158, 11, 0.35); }
+.chip-red   { background-color: rgba(239, 68, 68, 0.35); }
+
+.mode-actions {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  &.single {
+    grid-template-columns: 1fr;
+  }
+
+  /* make your gold buttons fill the grid nicely */
+  .poker-btn {
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+  }
 }

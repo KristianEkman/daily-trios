@@ -27,7 +27,8 @@ export class TopListComponent {
   }
 
   getTopList() {
-    this.data.getTopList(this.Date).then((topList) => {
+    const date = new Date().toISOString().split('T')[0];
+    this.data.getTopList(date).then((topList) => {
       this.Toplist = topList;
     });
   }
