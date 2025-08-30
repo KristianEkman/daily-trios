@@ -6,14 +6,11 @@ export type ToplistEntry = { user: string; time: number };
 @Injectable({ providedIn: 'root' })
 export class GameDataService {
   private db = inject(Database);
+  private username = localStorage.getItem('set-user-name') ?? 'Guest';
 
   /** Save a user's result for a given gameId if it doesn't already exist */
-  async storeResult(
-    user: string,
-    gameId: string,
-    seconds: number
-  ): Promise<void> {
-    const path = `${gameId}/${user}`;
+  async storeResult(gameId: string, seconds: number, gameType: string): Promise<void> {
+    const path = `${gameId}/${gameType}/${this.username}`;
     const dbRef = ref(this.db, path);
 
     const snapshot = await get(dbRef);
@@ -25,13 +22,12 @@ export class GameDataService {
   }
 
   /** Fetch toplist for a gameId, sorted by time (ascending) and limited */
-  async getTopList(gameId: string, limit = 10): Promise<ToplistEntry[]> {
-    if (gameId === "") {
+  async getTopList(gameId: string, gameType: string, limit = 10): Promise<ToplistEntry[]> {
+    if (gameId === '') {
       throw new Error('getTopList called with empty gameId');
     }
-    const pathRef = ref(this.db, gameId);
+    const pathRef = ref(this.db, `${gameId}/${gameType}`);
     const snapshot = await get(pathRef);
-    
 
     if (!snapshot.exists()) return [];
 
@@ -50,7 +46,27 @@ export class GameDataService {
     return localStorage.getItem('set-user-name');
   }
 
-  setUserName(name: string) {
-    localStorage.setItem('set-user-name', name);
+  setUserName() {
+    let name = localStorage.getItem('set-user-name');
+
+    if (!name) {
+      name = prompt('What is your name?');
+      if (name) {
+        localStorage.setItem('set-user-name', name);
+      } else {
+        name = 'Guest';
+      }
+    }
+    this.username = name;
+  }
+
+  changeUserName() {
+    let name = prompt('What is your name?');
+    if (name) {
+      localStorage.setItem('set-user-name', name);
+    } else {
+      name = 'Guest';
+    }
+    this.username = name;
   }
 }

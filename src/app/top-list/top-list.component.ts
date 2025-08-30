@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  Output,
+} from '@angular/core';
 import { DialogComponent } from '../dialog/dialog.component';
 import { Utils } from '../utils';
 import { GameDataService, ToplistEntry } from '../services/game-data-service';
@@ -10,25 +17,27 @@ import { GameDataService, ToplistEntry } from '../services/game-data-service';
   templateUrl: './top-list.component.html',
   styleUrl: './top-list.component.scss',
 })
-export class TopListComponent {
+export class TopListComponent implements OnChanges {
   private data = inject(GameDataService);
 
   @Input() Date = '';
+  @Input() GameName = '';
   @Output() onClose = new EventEmitter<void>();
 
   Toplist: ToplistEntry[] = [];
 
-  constructor() {
-    this.getTopList();
-  }
+  constructor() {}
 
   formatTime(secs: number) {
     return Utils.formatTime(secs);
   }
 
+  ngOnChanges() {
+    this.getTopList();
+  }
+
   getTopList() {
-    const date = new Date().toISOString().split('T')[0];
-    this.data.getTopList(date).then((topList) => {
+    this.data.getTopList(this.Date, this.GameName).then((topList) => {
       this.Toplist = topList;
     });
   }

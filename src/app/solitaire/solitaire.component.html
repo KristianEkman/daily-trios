@@ -27,6 +27,7 @@
 </div>
 
 <div class="usertime">
+  <a href="#" (click)="changeUserName()" class="user">{{ UserName }}</a>
   <div class="time">{{ Time }}</div>
 </div>
 
@@ -37,5 +38,5 @@
 ></app-dialog>
 
 @if(ShowToplist){
-<app-top-list [Date]="Today" (onClose)="ShowToplist = false" />
+<app-top-list [Date]="Today" [GameName]="GameName" (onClose)="ShowToplist = false" />
 }

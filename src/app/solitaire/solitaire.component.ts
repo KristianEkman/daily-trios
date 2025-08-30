@@ -28,6 +28,7 @@ export class SolitaireComponent {
   private router = inject(Router);
   private data = inject(GameDataService);
 
+  GameName = 'solitaire';
   GameType: 'random' | 'daily' = 'daily';
   GameId = '';
   Today = Utils.getToday();
@@ -44,6 +45,7 @@ export class SolitaireComponent {
   dialogMessage = '';
   ShowToplist = false;
   Hints = 0;
+  UserName = this.data.getUserName();
 
   @ViewChild(CardsGridComponent) cardsGrid!: CardsGridComponent;
 
@@ -96,7 +98,7 @@ export class SolitaireComponent {
   }
 
   storeResult() {
-    // this.data.storeResult();
+    this.data.storeResult(this.Today, this.TotalSeconds, this.GameName);
   }
 
   private dealNewCards() {
@@ -230,5 +232,9 @@ export class SolitaireComponent {
         this.DealtCards.push(card);
       }
     }
+  }
+
+  changeUserName() {
+    this.data.changeUserName();
   }
 }

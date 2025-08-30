@@ -10,7 +10,7 @@ import { CardsGridComponent } from '../cards-grid/cards-grid.component';
 import { GameDataService } from '../services/game-data-service';
 import { ConfettiService } from '../services/confetti.service';
 import { GameButtonsComponent } from '../game-buttons/game-buttons.component';
-import { TopListComponent } from "../top-list/top-list.component";
+import { TopListComponent } from '../top-list/top-list.component';
 
 @Component({
   selector: 'app-root',
@@ -20,12 +20,19 @@ import { TopListComponent } from "../top-list/top-list.component";
     DialogComponent,
     CardsGridComponent,
     GameButtonsComponent,
-    TopListComponent
-],
+    TopListComponent,
+  ],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
 })
 export class GameComponent {
+  private data = inject(GameDataService);
+  private randomService = inject(RandomService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private confetti = inject(ConfettiService);
+
+  GameName = 'puzzle';
   GameType: 'random' | 'daily' = 'daily';
   title = 'daily-set';
   Deck: Deck = new Deck();
@@ -43,20 +50,13 @@ export class GameComponent {
   dialogMessage = '';
   Today = Utils.getToday();
   HintCount = 0;
-  UserName = 'Guest';
+  UserName = this.data.getUserName();
   Toplist: { user: string; time: number }[] = [];
   ShowToplist = false;
   GameId = '';
   RenderGrid = true;
 
-  private data = inject(GameDataService);
-  private randomService = inject(RandomService);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private confetti = inject(ConfettiService);
-
   constructor() {
-    this.setUserName();
     this.route.params.subscribe((r) => {
       const id = r['id'];
       if (!id) {
@@ -70,7 +70,7 @@ export class GameComponent {
   @ViewChild(CardsGridComponent) cardsGrid!: CardsGridComponent;
 
   showToplist() {
-    this.data.getTopList(this.Today).then((topList) => {
+    this.data.getTopList(this.Today, this.GameName).then((topList) => {
       this.Toplist = topList;
       this.ShowToplist = true;
     });
@@ -123,7 +123,7 @@ export class GameComponent {
           this.SelectedCards.forEach((c) => this.blink(c));
           if (this.Found.length === this.SetCount) {
             // all sets are found
-            this.data.storeResult(this.UserName, this.Today, this.TotalSeconds);
+            this.data.storeResult(this.Today, this.TotalSeconds, this.GameName);
             clearInterval(this.TimeHandle);
             this.dialogMessage = 'Your time is ' + this.Time;
             this.showDialog = true;
@@ -246,27 +246,7 @@ export class GameComponent {
   }
 
   changeUserName() {
-    let name = prompt('What is your name?');
-    if (name) {
-      localStorage.setItem('set-user-name', name);
-    } else {
-      name = 'Guest';
-    }
-    this.UserName = name;
-  }
-
-  setUserName() {
-    let name = localStorage.getItem('set-user-name');
-
-    if (!name) {
-      name = prompt('What is your name?');
-      if (name) {
-        localStorage.setItem('set-user-name', name);
-      } else {
-        name = 'Guest';
-      }
-    }
-    this.UserName = name;
+    this.data.changeUserName();
   }
 
   navigateToRandom() {
