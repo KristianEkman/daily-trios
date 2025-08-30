@@ -26,11 +26,11 @@ import { TopListComponent } from '../top-list/top-list.component';
   styleUrl: './game.component.scss',
 })
 export class GameComponent {
-  private data = inject(GameDataService);
-  private randomService = inject(RandomService);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private confetti = inject(ConfettiService);
+  private readonly data = inject(GameDataService);
+  private readonly randomService = inject(RandomService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly confetti = inject(ConfettiService);
 
   GameName = 'puzzle';
   GameType: 'random' | 'daily' = 'daily';
@@ -163,7 +163,7 @@ export class GameComponent {
       if (this.DealtCards.length === 11) {
         break;
       }
-      var length = this.DealtCards.length;
+      const length = this.DealtCards.length;
       const card1 = this.DealtCards[length - 1];
       const card2 = this.DealtCards[length - 2];
       this.createSetOrAddRandom(card1, card2);
@@ -178,7 +178,7 @@ export class GameComponent {
   createSetOrAddRandom(card1: CardInfo, card2: CardInfo) {
     const setCard = this.Deck.findMissingSetCard(card1, card2);
     if (setCard && !this.DealtCards.find((c) => c.Id === setCard.Id)) {
-      this.DealtCards.push(setCard!);
+      this.DealtCards.push(setCard);
     } else {
       this.addRandomcard();
     }
@@ -223,8 +223,8 @@ export class GameComponent {
   }
 
   giveHint() {
-    for (let i = 0; i < this.ExistingIds.length; i++) {
-      const setId = this.ExistingIds[i];
+    for (const element of this.ExistingIds) {
+      const setId = element;
       if (this.FoundIds.indexOf(setId) == -1) {
         const cardIds = setId.split('_');
         const hintId = this.HintCount % 2 == 0 ? cardIds[0] : cardIds[1];

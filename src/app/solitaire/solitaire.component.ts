@@ -9,6 +9,7 @@ import { RandomService } from '../randoms';
 import { DialogComponent } from '../dialog/dialog.component';
 import { TopListComponent } from '../top-list/top-list.component';
 import { GameDataService } from '../services/game-data-service';
+import { ConfettiService } from '../services/confetti.service';
 
 @Component({
   selector: 'app-solitaire',
@@ -23,10 +24,11 @@ import { GameDataService } from '../services/game-data-service';
   styleUrl: './solitaire.component.scss',
 })
 export class SolitaireComponent {
-  private route = inject(ActivatedRoute);
-  private randomService = inject(RandomService);
-  private router = inject(Router);
-  private data = inject(GameDataService);
+  private readonly randomService = inject(RandomService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly data = inject(GameDataService);
+  private readonly confetti = inject(ConfettiService);
 
   GameName = 'solitaire';
   GameType: 'random' | 'daily' = 'daily';
@@ -93,6 +95,7 @@ export class SolitaireComponent {
         this.storeResult();
         this.dialogMessage = `You finished in ${this.Time}`;
         this.showDialog = true;
+        this.confetti.fire();
       }
     }
   }
@@ -132,15 +135,6 @@ export class SolitaireComponent {
     if (index > -1) {
       this.SelectedCards.splice(index, 1);
     }
-  }
-
-  navigateToDaily() {
-    this.router.navigateByUrl('solitaire/');
-  }
-
-  navigateToRandom() {
-    const seed = Math.floor(Math.random() * 1000).toString();
-    this.router.navigateByUrl(`solitaire/${seed}`);
   }
 
   shuffleDealtCards() {
@@ -198,7 +192,7 @@ export class SolitaireComponent {
       this.DealtCards = [];
       this.Time = '00:00';
       this.TotalSeconds = 0;
-      // this.HintCount = 0;
+      this.Hints = 0;
       this.Started = new Date().getTime();
 
       this.showDialog = false;

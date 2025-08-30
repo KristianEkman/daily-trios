@@ -10,7 +10,7 @@ import { GameDataService } from './services/game-data-service';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  private data = inject(GameDataService);
+  private readonly data = inject(GameDataService);
 
   constructor() {
     this.data.setUserName();

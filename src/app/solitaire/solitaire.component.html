@@ -38,5 +38,11 @@
 ></app-dialog>
 
 @if(ShowToplist){
-<app-top-list [Date]="Today" [GameName]="GameName" (onClose)="ShowToplist = false" />
+<app-top-list
+  [Date]="Today"
+  [GameName]="GameName"
+  (onClose)="ShowToplist = false"
+/>
 }
+
+<canvas id="confetti-canvas" class="confetti"></canvas>

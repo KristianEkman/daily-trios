@@ -30,3 +30,8 @@
 .time {
   font-size: 1.5em;
 }
+.confetti {
+  position: fixed;
+  pointer-events: none;
+  inset: 0;
+}

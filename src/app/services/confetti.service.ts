@@ -15,13 +15,13 @@ export class ConfettiService {
     const w = (canvas.width = window.innerWidth);
     const h = (canvas.height = window.innerHeight);
 
-    const N = 180;
+    const N = 160;
     const originX = w / 2;
-    const originY = h * 0.9; // lower screen
-    const g = 500; // gravity (px/s^2)
-    const speedMin = 200,
-      speedMax = 700;
-    const spreadDeg = 55;
+    const originY = h * 0.9;
+    const g = 600; // stronger gravity
+    const speedMin = 250,
+      speedMax = 750;
+    const spreadDeg = 65;
 
     const rad = (deg: number) => (deg * Math.PI) / 180;
 
@@ -33,12 +33,21 @@ export class ConfettiService {
       r: number;
       rot: number;
       vr: number;
-      hue: number;
+      color: string;
     };
+
+    // Palette: white, yellow, orange, red
+    const palette = [
+      'hsla(0, 100%, 60%, OPACITY)', // red
+      'hsla(30, 100%, 55%, OPACITY)', // orange
+      'hsla(45, 100%, 60%, OPACITY)', // yellow
+      'hsla(0, 0%, 100%, OPACITY)', // white
+    ];
 
     const pieces: Piece[] = Array.from({ length: N }).map(() => {
       const angle = -90 + (Math.random() * 2 - 1) * spreadDeg;
       const speed = speedMin + Math.random() * (speedMax - speedMin);
+      const baseColor = palette[Math.floor(Math.random() * palette.length)];
       return {
         x: originX,
         y: originY,
@@ -47,7 +56,7 @@ export class ConfettiService {
         r: 2 + Math.random() * 4,
         rot: Math.random() * Math.PI,
         vr: (-0.2 + Math.random() * 0.4) * 4,
-        hue: Math.random() * 360,
+        color: baseColor,
       };
     });
 
@@ -74,7 +83,13 @@ export class ConfettiService {
         ctx.save();
         ctx.translate(p.x, p.y);
         ctx.rotate(p.rot);
-        ctx.fillStyle = `hsla(${p.hue}, 90%, 60%, ${opacity})`;
+
+        // Replace OPACITY placeholder in palette
+        ctx.fillStyle = p.color.replace('OPACITY', opacity.toString());
+
+        ctx.shadowBlur = 12; // glow effect
+        ctx.shadowColor = ctx.fillStyle;
+
         ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
         ctx.restore();
       }

@@ -18,7 +18,7 @@ import { GameDataService, ToplistEntry } from '../services/game-data-service';
   styleUrl: './top-list.component.scss',
 })
 export class TopListComponent implements OnChanges {
-  private data = inject(GameDataService);
+  private readonly data = inject(GameDataService);
 
   @Input() Date = '';
   @Input() GameName = '';
