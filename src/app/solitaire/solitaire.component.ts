@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RandomService } from '../randoms';
 import { DialogComponent } from '../dialog/dialog.component';
 import { TopListComponent } from '../top-list/top-list.component';
+import { GameDataService } from '../services/game-data-service';
 
 @Component({
   selector: 'app-solitaire',
@@ -25,6 +26,7 @@ export class SolitaireComponent {
   private route = inject(ActivatedRoute);
   private randomService = inject(RandomService);
   private router = inject(Router);
+  private data = inject(GameDataService);
 
   GameType: 'random' | 'daily' = 'daily';
   GameId = '';
@@ -41,6 +43,7 @@ export class SolitaireComponent {
   showDialog = false;
   dialogMessage = '';
   ShowToplist = false;
+  Hints = 0;
 
   @ViewChild(CardsGridComponent) cardsGrid!: CardsGridComponent;
 
@@ -85,10 +88,15 @@ export class SolitaireComponent {
       if (!this.hasSet(false)) {
         clearInterval(this.TimeHandle);
         this.TimeHandle = null;
+        this.storeResult();
         this.dialogMessage = `You finished in ${this.Time}`;
         this.showDialog = true;
       }
     }
+  }
+
+  storeResult() {
+    // this.data.storeResult();
   }
 
   private dealNewCards() {
@@ -148,8 +156,12 @@ export class SolitaireComponent {
             )
           ) {
             if (giveHint) {
-              this.blink(this.DealtCards[a]);
-              this.blink(this.DealtCards[b]);
+              if (this.Hints % 2 === 0) {
+                this.blink(this.DealtCards[a]);
+              } else {
+                this.blink(this.DealtCards[b]);
+              }
+              this.Hints++;
             }
             return true;
           }
@@ -203,10 +215,9 @@ export class SolitaireComponent {
 
       const diffMs = now - this.Started;
       let totalSeconds = Math.floor(diffMs / 1000);
-
+      totalSeconds += this.Hints * 30;
       this.TotalSeconds = totalSeconds;
       let formatted = Utils.formatTime(totalSeconds);
-
       this.Time = formatted;
     }, 1000);
   }
