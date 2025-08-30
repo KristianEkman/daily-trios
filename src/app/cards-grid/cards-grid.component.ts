@@ -85,7 +85,7 @@ export class CardsGridComponent {
     this.Selected.emit(card);
   }
 
-  public shuffleDealtCards(): CardInfo[] {
+  storeRects() {
     const grid = this.elementRef.nativeElement.querySelector(
       '.grid'
     ) as HTMLElement;
@@ -97,12 +97,46 @@ export class CardsGridComponent {
 
     const firstRects = new Map<HTMLElement, DOMRect>();
     cards.forEach((el) => firstRects.set(el, el.getBoundingClientRect()));
+    return { grid, firstRects };
+  }
 
+  public shuffleDealtCards(): CardInfo[] {
+    const state = this.storeRects() as {
+      grid: HTMLElement;
+      firstRects: Map<HTMLElement, DOMRect>;
+    };
     // 2) Update data -> DOM reorders
     this.Cards = this.randomService.shuffelArray(this.Cards);
     this.cdr.detectChanges();
 
     // 3) LAST: after DOM paints, measure new positions
+    this.runAnimation(
+      state.grid as HTMLElement,
+      state.firstRects as Map<HTMLElement, DOMRect>
+    );
+
+    return this.Cards;
+  }
+
+  removeCards(ids: number[]) {
+    const state = this.storeRects() as {
+      grid: HTMLElement;
+      firstRects: Map<HTMLElement, DOMRect>;
+    };
+    // remove cards from this.Cards
+    this.Cards = this.Cards.filter((c) => !ids.includes(c.Id));
+    this.cdr.detectChanges();
+    this.runAnimation(
+      state.grid as HTMLElement,
+      state.firstRects as Map<HTMLElement, DOMRect>
+    );
+    return this.Cards;
+  }
+
+  private runAnimation(
+    grid: HTMLElement,
+    firstRects: Map<HTMLElement, DOMRect>
+  ) {
     requestAnimationFrame(() => {
       const movedCards = Array.from(
         grid.querySelectorAll('app-card')
@@ -133,7 +167,5 @@ export class CardsGridComponent {
         });
       });
     });
-
-    return this.Cards;
   }
 }

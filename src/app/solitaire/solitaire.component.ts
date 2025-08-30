@@ -102,7 +102,7 @@ export class SolitaireComponent {
   private dealNewCards() {
     const ids = this.DealtCards.filter((c) => c.Selected).map((c) => c.Id);
     const addCards = this.DealtCards.length <= 12;
-
+    let removeCards = 0;
     ids.forEach((id, i) => {
       const next = this.Deck.Cards.pop();
       if (next && addCards) {
@@ -112,11 +112,12 @@ export class SolitaireComponent {
           this.DealtCards.splice(removeIndex, 1, next);
         }, 30 * i);
       } else {
-        const removeIndex = this.DealtCards.findIndex((c) => c.Id === id);
-        if (removeIndex === -1) return;
-        this.DealtCards.splice(removeIndex, 1);
+        removeCards++;
       }
     });
+    if (removeCards > 0) {
+      this.DealtCards = this.cardsGrid.removeCards(ids);
+    }
   }
 
   private shake(cards: CardInfo[]) {

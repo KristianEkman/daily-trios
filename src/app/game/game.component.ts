@@ -177,7 +177,7 @@ export class GameComponent {
 
   createSetOrAddRandom(card1: CardInfo, card2: CardInfo) {
     const setCard = this.Deck.findMissingSetCard(card1, card2);
-    if (setCard && !this.DealtCards.find((c) => c.Id == setCard.Id)) {
+    if (setCard && !this.DealtCards.find((c) => c.Id === setCard.Id)) {
       this.DealtCards.push(setCard!);
     } else {
       this.addRandomcard();
@@ -228,7 +228,7 @@ export class GameComponent {
       if (this.FoundIds.indexOf(setId) == -1) {
         const cardIds = setId.split('_');
         const hintId = this.HintCount % 2 == 0 ? cardIds[0] : cardIds[1];
-        const hintCard = this.DealtCards.find((c) => c.Id == parseInt(hintId));
+        const hintCard = this.DealtCards.find((c) => c.Id === parseInt(hintId));
         if (hintCard) {
           this.blink(hintCard);
         }
