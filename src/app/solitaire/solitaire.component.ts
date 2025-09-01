@@ -234,6 +234,13 @@ export class SolitaireComponent {
     }, 1000);
   }
 
+  dealThreeCards() {
+    if (this.hasSet(true)) {
+      return;
+    }
+    this.dealCards(3);
+  }
+
   dealCards(count: number) {
     for (let i = 0; i < count; i++) {
       const card = this.Deck.Cards.pop();
