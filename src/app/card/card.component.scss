@@ -6,10 +6,6 @@
   // subtle hover lift
   @media (hover: hover) and (pointer: fine) {
     transition: transform 140ms ease, box-shadow 140ms ease;
-    &:hover {
-      transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
-    }
   }
 }
 
@@ -38,7 +34,6 @@
 }
 
 .card-images svg {
-  
   @media (orientation: landscape) {
     width: calc(50vw / 10);
   }
