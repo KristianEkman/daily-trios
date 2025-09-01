@@ -10,6 +10,9 @@ import { DialogComponent } from '../dialog/dialog.component';
 import { TopListComponent } from '../top-list/top-list.component';
 import { GameDataService } from '../services/game-data-service';
 import { ConfettiService } from '../services/confetti.service';
+import { MatchingGameService } from '../services/matching-game.service';
+import { AsyncPipe } from '@angular/common';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-solitaire',
@@ -19,6 +22,7 @@ import { ConfettiService } from '../services/confetti.service';
     CardsGridComponent,
     DialogComponent,
     TopListComponent,
+    AsyncPipe,
   ],
   templateUrl: './solitaire.component.html',
   styleUrl: './solitaire.component.scss',
@@ -26,9 +30,9 @@ import { ConfettiService } from '../services/confetti.service';
 export class SolitaireComponent {
   private readonly randomService = inject(RandomService);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly data = inject(GameDataService);
   private readonly confetti = inject(ConfettiService);
+  private readonly online = inject(MatchingGameService);
 
   GameName = 'solitaire';
   GameType: 'random' | 'daily' = 'daily';
@@ -48,10 +52,21 @@ export class SolitaireComponent {
   ShowToplist = false;
   Hints = 0;
   UserName = this.data.getUserName();
+  Online = false;
 
   @ViewChild(CardsGridComponent) cardsGrid!: CardsGridComponent;
+  get gameState() {
+    return this.online.game$.pipe(map((state) => JSON.stringify(state, null, 2)));
+  }
 
   constructor() {
+    this.route.queryParams.subscribe((q) => {
+      if (q['online'] === 'true') {
+        this.Online = true;
+        this.online.joinGame("game123", this.UserName!);
+      }
+    });
+
     this.route.params.subscribe((r) => {
       const id = r['id'];
       if (!id) {

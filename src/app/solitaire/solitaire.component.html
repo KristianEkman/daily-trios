@@ -25,6 +25,9 @@
     <p>Remaining cards: {{ Deck.Cards.length }}</p>
   </div>
 </div>
+@if (Online){
+<div>{{ gameState | async }}</div>
+}
 
 <div class="usertime">
   <a href="#" (click)="changeUserName()" class="user">{{ UserName }}</a>
