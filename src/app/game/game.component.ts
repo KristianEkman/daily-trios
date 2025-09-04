@@ -249,17 +249,16 @@ export class GameComponent {
     this.data.changeUserName();
   }
 
-  navigateToRandom() {
-    const seed = Math.floor(Math.random() * 1000).toString();
-    this.router.navigateByUrl(`game/${seed}`);
-  }
-
-  navigateToDaily() {
-    this.router.navigateByUrl('game/');
-  }
-
   formatTime(secs: number) {
     return Utils.formatTime(secs);
+  }
+
+  restart() {
+    if (this.GameType === 'daily') {
+      this.startDaily();
+    } else if (this.GameType === 'random') {
+      this.router.navigate(['/game', RandomService.generateRandomId()]);
+    }
   }
 
   startRandom(id: string) {

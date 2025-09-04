@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { RandomService } from '../randoms';
 
 @Component({
   selector: 'app-start-page',
@@ -22,7 +23,6 @@ export class StartPageComponent {
   }
 
   getRandomId() {
-    const seed = Math.floor(Math.random() * 1000).toString();
-    return seed;
+    return RandomService.generateRandomId();
   }
 }

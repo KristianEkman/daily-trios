@@ -62,13 +62,6 @@ export class SolitaireComponent {
     });
   }
 
-  startRandom(id: string) {
-    this.GameType = 'random';
-    this.GameId = id;
-    this.randomService.setSeed(id);
-    this.startGame();
-  }
-
   cardSelected(card: CardInfo) {
     const cards = this.SelectedCards;
     cards.push(card);
@@ -177,6 +170,21 @@ export class SolitaireComponent {
 
   showToplist() {
     this.ShowToplist = true;
+  }
+
+  restart() {
+    if (this.GameType === 'daily') {
+      this.startDaily();
+    } else if (this.GameType === 'random') {
+      this.router.navigate(['/solitaire', RandomService.generateRandomId()]);
+    }
+  }
+
+  startRandom(id: string) {
+    this.GameType = 'random';
+    this.GameId = id;
+    this.randomService.setSeed(id);
+    this.startGame();
   }
 
   startDaily() {

@@ -36,4 +36,8 @@ export class RandomService {
     }
     return shuffled;
   }
+
+  static generateRandomId() {
+    return Math.floor(Math.random() * 1000).toString();
+  }
 }

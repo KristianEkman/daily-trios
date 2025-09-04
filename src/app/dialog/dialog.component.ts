@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-dialog',
@@ -9,6 +9,11 @@ import { Component, Input } from '@angular/core';
   styleUrl: './dialog.component.scss',
 })
 export class DialogComponent {
+  @Output() PlayAgain = new EventEmitter<void>();
   @Input() Message: string = '';
   @Input() Visible: boolean = false;
+
+  onAgain() {
+    this.PlayAgain.emit();
+  }
 }

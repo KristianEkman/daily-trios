@@ -33,6 +33,7 @@
   [Visible]="showDialog"
   [Message]="dialogMessage"
   (click)="showDialog = false"
+  (PlayAgain)="restart()"
 ></app-dialog>
 
 @if(ShowToplist){
