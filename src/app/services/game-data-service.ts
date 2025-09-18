@@ -5,11 +5,16 @@ export type ToplistEntry = { user: string; time: number };
 
 @Injectable({ providedIn: 'root' })
 export class GameDataService {
+  readonly nameKey = 'trios-user-name';
   private db = inject(Database);
-  private username = localStorage.getItem('set-user-name') ?? 'Guest';
+  private username = localStorage.getItem(this.nameKey) ?? 'Guest';
 
   /** Save a user's result for a given gameId if it doesn't already exist */
-  async storeResult(gameId: string, seconds: number, gameType: string): Promise<void> {
+  async storeResult(
+    gameId: string,
+    seconds: number,
+    gameType: string
+  ): Promise<void> {
     const path = `${gameId}/${gameType}/${this.username}`;
     const dbRef = ref(this.db, path);
 
@@ -22,7 +27,11 @@ export class GameDataService {
   }
 
   /** Fetch toplist for a gameId, sorted by time (ascending) and limited */
-  async getTopList(gameId: string, gameType: string, limit = 10): Promise<ToplistEntry[]> {
+  async getTopList(
+    gameId: string,
+    gameType: string,
+    limit = 10
+  ): Promise<ToplistEntry[]> {
     if (gameId === '') {
       throw new Error('getTopList called with empty gameId');
     }
@@ -43,16 +52,16 @@ export class GameDataService {
 
   /** User name helpers (localStorage) */
   getUserName(): string | null {
-    return localStorage.getItem('set-user-name');
+    return localStorage.getItem(this.nameKey);
   }
 
   setUserName() {
-    let name = localStorage.getItem('set-user-name');
+    let name = localStorage.getItem(this.nameKey);
 
     if (!name) {
       name = prompt('What is your name?');
       if (name) {
-        localStorage.setItem('set-user-name', name);
+        localStorage.setItem(this.nameKey, name);
       } else {
         name = 'Guest';
       }
@@ -63,7 +72,7 @@ export class GameDataService {
   changeUserName() {
     let name = prompt('What is your name?');
     if (name) {
-      localStorage.setItem('set-user-name', name);
+      localStorage.setItem(this.nameKey, name);
     } else {
       name = 'Guest';
     }

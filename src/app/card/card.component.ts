@@ -33,7 +33,7 @@ import { Filling, Shape } from '../types';
         ),
       ]),
     ]),
-    // wrong-set shake
+    // wrong-trio shake
     trigger('shake', [
       state('off', style({})),
       state('on', style({})),

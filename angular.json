@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "daily-set": {
+    "daily-trios": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/daily-set",
+            "outputPath": "dist/daily-trios",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "daily-set:build:production"
+              "buildTarget": "daily-trios:build:production"
             },
             "development": {
-              "buildTarget": "daily-set:build:development"
+              "buildTarget": "daily-trios:build:development"
             }
           },
           "defaultConfiguration": "development"

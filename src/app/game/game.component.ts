@@ -34,7 +34,7 @@ export class GameComponent {
 
   GameName = 'puzzle';
   GameType: 'random' | 'daily' = 'daily';
-  title = 'daily-set';
+  title = 'Card Matching';
   Deck: Deck = new Deck();
   SelectedCards: CardInfo[] = [];
   DealtCards: CardInfo[] = [];
@@ -113,11 +113,11 @@ export class GameComponent {
     cards.push(card);
     if (cards.length == 3) {
       if (Deck.isSet(cards[0], cards[1], cards[2])) {
-        // a set is found
+        // a trio is found
         cards.forEach((c) => (c.Selected = false));
         const setId = this.getId(this.SelectedCards);
         if (this.FoundIds.indexOf(setId) == -1) {
-          // it is a new set
+          // it is a new trio
           this.FoundIds.push(setId);
           this.Found.push(structuredClone(this.SelectedCards));
           this.SelectedCards.forEach((c) => this.blink(c));
@@ -130,7 +130,7 @@ export class GameComponent {
             this.confetti.fire(1200);
           }
         } else {
-          // the set already exists
+          // the trio already exists
           this.Found.forEach((f) => {
             const thisId = this.getId(f);
             if (setId === thisId) {
@@ -140,7 +140,7 @@ export class GameComponent {
         }
         this.SelectedCards = [];
       } else {
-        // wrong set -> shake selected and clear
+        // wrong trio -> shake selected and clear
         this.shake(cards);
         setTimeout(() => {
           this.SelectedCards.forEach((c) => (c.Selected = false));
