@@ -7,7 +7,7 @@
 <div class="card-container">
   <div>
     <div class="sub-header">
-      <span>Find all sets in the deck</span>
+      <span>Find all trios in the deck</span>
       <span>{{ GameType == "random" ? "Id: " + GameId : Today }}</span>
     </div>
     @if (RenderGrid) {
@@ -21,7 +21,7 @@
     }
   </div>
   <div class="founds-container">
-    <p>Found sets: {{ FoundSets }}</p>
+    <p>Found trios: {{ FoundSets }}</p>
     <p>Remaining cards: {{ Deck.Cards.length }}</p>
   </div>
 </div>

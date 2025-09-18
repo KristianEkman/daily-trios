@@ -122,7 +122,7 @@ export class GameComponent {
           this.Found.push(structuredClone(this.SelectedCards));
           this.SelectedCards.forEach((c) => this.blink(c));
           if (this.Found.length === this.SetCount) {
-            // all sets are found
+            // all trios are found
             this.data.storeResult(this.Today, this.TotalSeconds, this.GameName);
             clearInterval(this.TimeHandle);
             this.dialogMessage = 'Your time is ' + this.Time;
@@ -195,7 +195,7 @@ export class GameComponent {
   }
 
   countSets() {
-    const sets: string[] = [];
+    const trios: string[] = [];
     for (let a = 0; a < this.DealtCards.length; a++) {
       for (let b = a + 1; b < this.DealtCards.length; b++) {
         for (let c = b + 1; c < this.DealtCards.length; c++) {
@@ -211,15 +211,15 @@ export class GameComponent {
               this.DealtCards[b],
               this.DealtCards[c],
             ]);
-            if (sets.indexOf(id) < 0) {
-              sets.push(id);
+            if (trios.indexOf(id) < 0) {
+              trios.push(id);
             }
           }
         }
       }
     }
-    this.SetCount = sets.length;
-    this.ExistingIds = sets;
+    this.SetCount = trios.length;
+    this.ExistingIds = trios;
   }
 
   giveHint() {
